@@ -5,6 +5,14 @@
 
 	import { gameStore } from '$lib/engine/store';
 
+	import type { EntityId } from '$lib/engine/types';
+
+	let selectedEntityId: EntityId | null = null;
+
+	function handleEntityInteraction(entityId: EntityId | null) {
+		selectedEntityId = selectedEntityId === entityId ? null : entityId;
+	}
+
 	const fullRows = Array.from({ length: 26 }, (_, i) => i);
 	const fullCols = Array.from({ length: 11 }, (_, i) => i);
 
@@ -32,7 +40,14 @@
 				{#if row > 0 && row < 25 && col > 0 && col < 11}
 					{#if getEntityAt(col, row)}
 						{@const character = getEntityAt(col, row)}
-						<Character team={character!.team} role={character!.role} />
+						<Character
+							index={-1}
+							team={character!.team}
+							role={character!.role}
+							isSelected={selectedEntityId === character!.id}
+							onclick={() => handleEntityInteraction(character!.id)}
+							onkeydown={() => {}}
+						/>
 					{/if}
 				{/if}
 			</Cell>
