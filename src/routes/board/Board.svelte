@@ -7,7 +7,7 @@
 
 	import type { EntityId } from '$lib/engine/types';
 
-	let selectedEntityId: EntityId | null = null;
+	let selectedEntityId = $state<EntityId | null>(null);
 
 	function handleEntityInteraction(entityId: EntityId | null) {
 		selectedEntityId = selectedEntityId === entityId ? null : entityId;

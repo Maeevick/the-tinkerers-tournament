@@ -2,21 +2,14 @@
 	import type { Team, Role } from '$lib/character/types';
 	import type { KeyboardEventHandler, MouseEventHandler } from 'svelte/elements';
 
-	let {
-		index,
-		team,
-		role,
-		isSelected,
-		onclick,
-		onkeydown
-	}: {
+	let { index, team, role, isSelected, onclick, onkeydown } = $props<{
 		index: number;
 		team: Team;
 		role: Role;
 		isSelected: boolean;
 		onclick: MouseEventHandler<HTMLDivElement>;
 		onkeydown: KeyboardEventHandler<HTMLDivElement>;
-	} = $props();
+	}>();
 
 	const getDisplayLabel = (r: Role): string => {
 		switch (r) {
