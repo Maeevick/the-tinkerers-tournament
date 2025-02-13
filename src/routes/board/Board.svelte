@@ -46,7 +46,6 @@
 							role={character!.role}
 							isSelected={selectedEntityId === character!.id}
 							onclick={() => handleEntityInteraction(character!.id)}
-							onkeydown={() => {}}
 						/>
 					{/if}
 				{/if}
