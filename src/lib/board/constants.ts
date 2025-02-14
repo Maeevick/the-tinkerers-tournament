@@ -10,6 +10,7 @@ type Colors = {
 	field: {
 		light: string;
 		dark: string;
+		highlight: string;
 	};
 	stands: string;
 };
@@ -25,7 +26,8 @@ export const COLORS: Colors = {
 	},
 	field: {
 		light: '#9db167',
-		dark: '#7a8c52'
+		dark: '#7a8c52',
+		highlight: '#cbd5e0'
 	},
 	stands: '#f0f0f0'
 };

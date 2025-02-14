@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { COLUMNS } from '$lib/board/constants';
+	import { getAvailableMoves } from '$lib/board/highlight';
 	import Cell from './Cell.svelte';
 	import Character from '../character/Character.svelte';
 
@@ -8,6 +9,8 @@
 	import type { EntityId } from '$lib/engine/types';
 
 	let selectedEntityId = $state<EntityId | null>(null);
+
+	const availableMoves = $derived(getAvailableMoves($gameStore, selectedEntityId));
 
 	function handleEntityInteraction(entityId: EntityId | null) {
 		selectedEntityId = selectedEntityId === entityId ? null : entityId;
@@ -31,12 +34,20 @@
 	function getEntityAt(x: number, y: number) {
 		return $gameStore.entities.find((e) => e.position.x === x - 1 && e.position.y === y);
 	}
+
+	function isHighlighted(x: number, y: number) {
+		return availableMoves.some((move) => move.x === x - 1 && move.y === y);
+	}
 </script>
 
 <div class="grid grid-cols-11 gap-0">
 	{#each fullRows as row}
 		{#each fullCols as col}
-			<Cell position={{ x: col, y: row }} label={getCellContent(row, col)}>
+			<Cell
+				position={{ x: col, y: row }}
+				isHighlighted={isHighlighted(col, row)}
+				label={getCellContent(row, col)}
+			>
 				{#if row > 0 && row < 25 && col > 0 && col < 11}
 					{#if getEntityAt(col, row)}
 						{@const character = getEntityAt(col, row)}

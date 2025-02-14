@@ -1,9 +1,19 @@
 <script lang="ts">
 	import type { Position } from '$lib/board/types';
 	import { COLORS, COLUMNS } from '$lib/board/constants';
+	import type { Component } from 'svelte';
 
-	export let position: Position;
-	export let label: string = '';
+	let {
+		position,
+		label = '',
+		isHighlighted = false,
+		children
+	} = $props<{
+		position: Position;
+		label?: String;
+		isHighlighted?: boolean;
+		children: () => {};
+	}>();
 
 	function getCellBorder(x: number, y: number): string {
 		if (y === 0 && x === 0) return 'border border-black';
@@ -12,7 +22,8 @@
 		return 'border-r border-b border-black';
 	}
 
-	function getCellColor(x: number, y: number): string {
+	function getCellColor(x: number, y: number, highlighted: boolean): string {
+		if (highlighted) return COLORS.field.highlight;
 		if (x === 0 || x === 10 || y === 0 || y === 25) return COLORS.stands;
 
 		if (y === 1) {
@@ -35,8 +46,8 @@
 
 <div
 	class={`flex h-8 w-8 items-center justify-center font-bold ${getCellBorder(position.x, position.y)}`}
-	style:background-color={getCellColor(position.x, position.y)}
+	style:background-color={getCellColor(position.x, position.y, isHighlighted)}
 >
 	{label}
-	<slot />
+	{@render children()}
 </div>
