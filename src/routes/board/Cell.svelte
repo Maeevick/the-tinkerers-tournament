@@ -1,19 +1,24 @@
 <script lang="ts">
 	import type { Position } from '$lib/board/types';
-	import { COLORS, COLUMNS } from '$lib/board/constants';
-	import type { Component } from 'svelte';
+	import { COLORS, COLUMNS, GRID_DIMENSIONS, ROWS } from '$lib/board/constants';
 
-	let {
-		position,
-		label = '',
-		isHighlighted = false,
-		children
-	} = $props<{
+	let { position, highlighted, children } = $props<{
 		position: Position;
-		label?: String;
-		isHighlighted?: boolean;
+		highlighted: Set<string>;
 		children: () => {};
 	}>();
+
+	function getCellContent(x: number, y: number): string {
+		if (x === 0 || x === GRID_DIMENSIONS.width + 1) {
+			if (y === 0 || y === GRID_DIMENSIONS.height + 1) return '';
+			return ROWS[y];
+		}
+		if (y === 0 || y === GRID_DIMENSIONS.height + 1) {
+			if (x === 0 || x === GRID_DIMENSIONS.width + 1) return '';
+			return COLUMNS[x];
+		}
+		return '';
+	}
 
 	function getCellBorder(x: number, y: number): string {
 		if (y === 0 && x === 0) return 'border border-black';
@@ -27,27 +32,35 @@
 		if (x === 0 || x === 10 || y === 0 || y === 25) return COLORS.stands;
 
 		if (y === 1) {
-			const colLetter = COLUMNS[x - 1];
-			if (colLetter === 'C' || colLetter === 'G') return COLORS.stands;
-			if (colLetter === 'D' || colLetter === 'E' || colLetter === 'F') return COLORS.home.dark;
+			const label = COLUMNS[x];
+			if (label === 'C' || label === 'G') return COLORS.stands;
+			if (label === 'D' || label === 'E' || label === 'F') return COLORS.home.dark;
 			return COLORS.home.light;
 		}
 
 		if (y === 24) {
-			const colLetter = COLUMNS[x - 1];
-			if (colLetter === 'C' || colLetter === 'G') return COLORS.stands;
-			if (colLetter === 'D' || colLetter === 'E' || colLetter === 'F') return COLORS.away.dark;
+			const label = COLUMNS[x];
+			if (label === 'C' || label === 'G') return COLORS.stands;
+			if (label === 'D' || label === 'E' || label === 'F') return COLORS.away.dark;
 			return COLORS.away.light;
 		}
 
 		return (x + y) % 2 === 0 ? COLORS.field.light : COLORS.field.dark;
 	}
+
+	function isHighlighted(x: number, y: number) {
+		return highlighted.has(`${x - 1}-${y}`);
+	}
 </script>
 
 <div
 	class={`flex h-8 w-8 items-center justify-center font-bold ${getCellBorder(position.x, position.y)}`}
-	style:background-color={getCellColor(position.x, position.y, isHighlighted)}
+	style:background-color={getCellColor(
+		position.x,
+		position.y,
+		isHighlighted(position.x, position.y)
+	)}
 >
-	{label}
+	{getCellContent(position.x, position.y)}
 	{@render children()}
 </div>

@@ -1,5 +1,8 @@
 export type Team = 'home' | 'away';
 export type Role = 'Fighter' | 'Runner' | 'Specialist';
+export type Stats = {
+	movement: number;
+};
 
 export type TeamComponent = {
 	team: Team;
@@ -7,10 +10,6 @@ export type TeamComponent = {
 
 export type RoleComponent = {
 	role: Role;
-};
-
-export type Stats = {
-	movement: number;
 };
 
 export type StatComponent = {
