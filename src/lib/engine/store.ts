@@ -34,7 +34,7 @@ const createInitialTeam = (
 			team,
 			role: 'Fighter',
 			position: { x: 3, y: baseRow },
-			state: { selected: false },
+			state: { selected: false, remainingMovement: ROLE_STATS.Fighter.stats.movement },
 			...ROLE_STATS.Fighter
 		},
 		{
@@ -42,7 +42,7 @@ const createInitialTeam = (
 			team,
 			role: 'Fighter',
 			position: { x: 5, y: baseRow },
-			state: { selected: false },
+			state: { selected: false, remainingMovement: ROLE_STATS.Fighter.stats.movement },
 			...ROLE_STATS.Fighter
 		},
 		{
@@ -50,7 +50,7 @@ const createInitialTeam = (
 			team,
 			role: 'Runner',
 			position: { x: 1, y: baseRow },
-			state: { selected: false },
+			state: { selected: false, remainingMovement: ROLE_STATS.Runner.stats.movement },
 			...ROLE_STATS.Runner
 		},
 		{
@@ -58,7 +58,7 @@ const createInitialTeam = (
 			team,
 			role: 'Runner',
 			position: { x: 7, y: baseRow },
-			state: { selected: false },
+			state: { selected: false, remainingMovement: ROLE_STATS.Runner.stats.movement },
 			...ROLE_STATS.Runner
 		},
 		{
@@ -66,7 +66,7 @@ const createInitialTeam = (
 			team,
 			role: 'Specialist',
 			position: { x: 4, y: baseRow },
-			state: { selected: false },
+			state: { selected: false, remainingMovement: ROLE_STATS.Specialist.stats.movement },
 			...ROLE_STATS.Specialist
 		}
 	];

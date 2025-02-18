@@ -1,3 +1,6 @@
 export type StateComponent = {
-	state: { selected: boolean };
+	state: {
+		selected: boolean;
+		remainingMovement: number;
+	};
 };

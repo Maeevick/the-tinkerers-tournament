@@ -44,7 +44,7 @@ The Tinkerer's Tournament is a creative playground exploring (almost) modern web
 - [x] Character selection
 - [x] Movement range display
 - [x] Character info panel
-- [ ] Character movement
+- [x] Character movement
 - [ ] Turn system
 - [ ] Basic combat
 - [ ] Victory points

@@ -1,15 +1,19 @@
 <script lang="ts">
+	/* eslint svelte/no-unused-svelte-ignore: "warn" */
 	import type { Snippet } from 'svelte';
+	import type { MouseEventHandler } from 'svelte/elements';
 
 	import type { Position } from '$lib/components/position';
 
 	import { COLORS } from '$lib/constants/colors';
 	import { COLUMNS, ROWS } from '$lib/constants/board';
 
-	let { position, highlighted, children } = $props<{
+	let { index, position, highlighted, children, onclick } = $props<{
+		index: number;
 		position: Position;
 		highlighted: Set<string>;
 		children: Snippet;
+		onclick: MouseEventHandler<HTMLDivElement>;
 	}>();
 
 	function getCellContent(x: number, y: number): string {
@@ -57,13 +61,17 @@
 	}
 </script>
 
+<!-- svelte-ignore a11y_click_events_have_key_events (keyboard support is not planned yet) -->
 <div
+	role="gridcell"
+	tabindex={index}
 	class={`flex h-8 w-8 items-center justify-center font-bold ${getCellBorder(position.x, position.y)}`}
 	style:background-color={getCellColor(
 		position.x,
 		position.y,
 		isHighlighted(position.x, position.y)
 	)}
+	{onclick}
 >
 	{getCellContent(position.x, position.y)}
 	{@render children()}

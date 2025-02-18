@@ -26,6 +26,7 @@
 				<span class="font-semibold">Stats:</span>
 				<div class="ml-2">
 					<div>Movement: {character!.stats.movement}</div>
+					<div>Remaining: {character!.state.remainingMovement}</div>
 				</div>
 			</div>
 

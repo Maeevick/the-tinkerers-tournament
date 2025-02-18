@@ -53,12 +53,37 @@ export function getAvailableMoves(state: GameState, entityId: EntityId | null): 
 				.filter(
 					(e) =>
 						e.id !== entityId &&
-						Math.abs(e.position.x - entity.position.x) <= entity.stats.movement &&
-						Math.abs(e.position.y - entity.position.y) <= entity.stats.movement
+						Math.abs(e.position.x - entity.position.x) <= entity.state.remainingMovement &&
+						Math.abs(e.position.y - entity.position.y) <= entity.state.remainingMovement
 				)
 				.map((e) => `${e.position.x}-${e.position.y}`)
 		),
 		new Set([`${entity.position.x}-${entity.position.y}`]),
-		entity.stats.movement
+		entity.state.remainingMovement
 	);
+}
+
+export function moveEntity(state: GameState, entityId: EntityId | null, to: Position): GameState {
+	if (!entityId) return state;
+	const entity = state.entities.find((e) => e.id === entityId);
+	if (!entity) return state;
+
+	if (entity.position.x === to.x && entity.position.y === to.y) return state;
+
+	return {
+		...state,
+		entities: state.entities.map((e) => {
+			if (e.id === entityId) {
+				return {
+					...e,
+					position: to,
+					state: {
+						...e.state,
+						remainingMovement: e.state.remainingMovement - getMoveCost(entity.position, to)
+					}
+				};
+			}
+			return e;
+		})
+	};
 }
