@@ -1,20 +1,24 @@
 <script lang="ts">
-	import type { Position } from '$lib/board/types';
-	import { COLORS, COLUMNS, GRID_DIMENSIONS, ROWS } from '$lib/board/constants';
+	import type { Snippet } from 'svelte';
+
+	import type { Position } from '$lib/components/position';
+
+	import { COLORS } from '$lib/constants/colors';
+	import { COLUMNS, ROWS } from '$lib/constants/board';
 
 	let { position, highlighted, children } = $props<{
 		position: Position;
 		highlighted: Set<string>;
-		children: () => {};
+		children: Snippet;
 	}>();
 
 	function getCellContent(x: number, y: number): string {
-		if (x === 0 || x === GRID_DIMENSIONS.width + 1) {
-			if (y === 0 || y === GRID_DIMENSIONS.height + 1) return '';
+		if (x === 0 || x === COLUMNS.length - 1) {
+			if (y === 0 || y === ROWS.length - 1) return '';
 			return ROWS[y];
 		}
-		if (y === 0 || y === GRID_DIMENSIONS.height + 1) {
-			if (x === 0 || x === GRID_DIMENSIONS.width + 1) return '';
+		if (y === 0 || y === ROWS.length - 1) {
+			if (x === 0 || x === COLUMNS.length - 1) return '';
 			return COLUMNS[x];
 		}
 		return '';

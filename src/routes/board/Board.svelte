@@ -1,29 +1,38 @@
 <script lang="ts">
-	import { COLUMNS, ROWS } from '$lib/board/constants';
-	import { getAvailableMoves } from '$lib/board/highlight';
-	import Cell from './Cell.svelte';
-	import Character from '../character/Character.svelte';
+	import type { EntityId } from '$lib/entities';
 
+	import { COLUMNS, ROWS } from '$lib/constants/board';
+
+	import { getAvailableMoves } from '$lib/systems/highlight';
 	import { gameStore } from '$lib/engine/store';
 
-	import type { EntityId } from '$lib/engine/types';
+	import Cell from './Cell.svelte';
+	import Character from '../character/Character.svelte';
 
 	const FULL_ROWS = Array.from({ length: ROWS.length }, (_, i) => i);
 	const FULL_COLS = Array.from({ length: COLUMNS.length }, (_, i) => i);
 
-	let selectedEntityId = $state<EntityId | null>(null);
 	let highlighted = $state<Set<string>>(new Set());
 
 	function handleEntityInteraction(entityId: EntityId | null) {
-		if (selectedEntityId === entityId) {
-			selectedEntityId = null;
-			highlighted = new Set();
-		} else {
-			selectedEntityId = entityId;
-			highlighted = new Set(
-				getAvailableMoves($gameStore, entityId).map((pos) => `${pos.x}-${pos.y}`)
-			);
-		}
+		const currentState = $gameStore;
+		const currentEntity = currentState.entities.find((e) => e.id === entityId);
+
+		const newState = {
+			...currentState,
+			entities: currentState.entities.map((entity) => ({
+				...entity,
+				state: {
+					...entity.state,
+					selected: entity.id === entityId ? !entity.state.selected : false
+				}
+			}))
+		};
+		gameStore.set(newState);
+
+		highlighted = currentEntity?.state.selected
+			? new Set()
+			: new Set(getAvailableMoves($gameStore, entityId).map((pos) => `${pos.x}-${pos.y}`));
 	}
 
 	function getEntityAt(x: number, y: number) {
@@ -42,7 +51,7 @@
 							index={-1}
 							team={character!.team}
 							role={character!.role}
-							isSelected={selectedEntityId === character!.id}
+							isSelected={character!.state.selected}
 							onclick={() => handleEntityInteraction(character!.id)}
 						/>
 					{/if}

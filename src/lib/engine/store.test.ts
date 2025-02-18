@@ -1,9 +1,11 @@
 import { describe, test, expect } from 'vitest';
 import { get } from 'svelte/store';
 import { gameStore } from './store';
-import type { RoleComponent, TeamComponent } from '$lib/character/types';
-import type { PositionComponent } from '$lib/board/types';
-import type { Entity } from './types';
+
+import type { Entity } from '../entities';
+import type { PositionComponent } from '$lib/components/position';
+import type { RoleComponent } from '$lib/components/role';
+import type { TeamComponent } from '$lib/components/team';
 
 describe('GameState Initialization', () => {
 	describe('should initialize teams entities correctly (1à characters as 2 fighters, 2 runners and 1 sepecialist', () => {

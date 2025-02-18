@@ -1,6 +1,9 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
+
 	import '../app.css';
-	let { children } = $props();
+
+	let { children } = $props<{ children: Snippet }>();
 </script>
 
 <div class="flex-col bg-gray-100 p-4">
@@ -13,7 +16,7 @@
 		</p>
 	</header>
 
-	<main class="flex items-center justify-center p-4">
+	<main class="grid grid-cols-6 items-center p-4">
 		{@render children()}
 	</main>
 

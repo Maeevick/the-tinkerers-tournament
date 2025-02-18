@@ -1,8 +1,11 @@
 <script lang="ts">
-	import type { Team, Role } from '$lib/character/types';
+	/* eslint svelte/no-unused-svelte-ignore: "warn" */
 	import type { MouseEventHandler } from 'svelte/elements';
 
-	let { index, team, role, isSelected, onclick, onkeydown } = $props<{
+	import type { Role } from '$lib/components/role';
+	import type { Team } from '$lib/components/team';
+
+	let { index, team, role, isSelected, onclick } = $props<{
 		index: number;
 		team: Team;
 		role: Role;
@@ -10,8 +13,8 @@
 		onclick: MouseEventHandler<HTMLDivElement>;
 	}>();
 
-	const getDisplayLabel = (r: Role): string => {
-		switch (r) {
+	const getDisplayLabel = (role: Role): string => {
+		switch (role) {
 			case 'Fighter':
 				return 'F';
 			case 'Runner':

@@ -1,4 +1,12 @@
-import type { Role, StatComponent } from './types';
+import type { Role } from './role';
+
+export type Stats = {
+	movement: number;
+};
+
+export type StatComponent = {
+	stats: Stats;
+};
 
 export const ROLE_STATS: Record<Role, StatComponent> = {
 	Fighter: { stats: { movement: 3 } },

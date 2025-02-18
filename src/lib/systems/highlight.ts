@@ -1,7 +1,7 @@
-import type { Position } from '$lib/board/types';
-import type { EntityId } from '$lib/engine/types';
+import type { EntityId } from '$lib/entities';
 import type { GameState } from '../engine/store';
-import { GRID_DIMENSIONS } from '$lib/board/constants';
+import { COLUMNS, ROWS } from '$lib/constants/board';
+import type { Position } from '$lib/components/position';
 
 function getNeighborsPositions(position: Position): Position[] {
 	const { x, y } = position;
@@ -11,8 +11,7 @@ function getNeighborsPositions(position: Position): Position[] {
 		{ x, y: y + 1 },
 		{ x, y: y - 1 }
 	].filter(
-		(pos) =>
-			pos.x >= 0 && pos.x < GRID_DIMENSIONS.width && pos.y > 1 && pos.y < GRID_DIMENSIONS.height
+		(pos) => pos.x >= 0 && pos.x < COLUMNS.length - 2 && pos.y > 1 && pos.y < ROWS.length - 2
 	);
 }
 
