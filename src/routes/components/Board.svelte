@@ -1,32 +1,34 @@
 <script lang="ts">
-	import type { EntityId } from '$lib/entities';
-	import type { Position } from '$lib/components/position';
-
 	import { COLUMNS, ROWS } from '$lib/constants/board';
 
+	import type { EntityId } from '$lib/entities';
+	import type { Position } from '$lib/components/position';
 	import { getAvailableMoves, moveEntity } from '$lib/systems/movement';
+	import { getSelectedEntityId, toggleEntitySelection } from '$lib/systems/selection';
 	import { gameStore } from '$lib/engine/store';
 
 	import Cell from './Cell.svelte';
-	import Character from '../character/Character.svelte';
-	import { getSelectedEntityId, toggleEntitySelection } from '$lib/systems/selection';
+	import Character from './Character.svelte';
 
 	const FULL_ROWS = Array.from({ length: ROWS.length }, (_, i) => i);
 	const FULL_COLS = Array.from({ length: COLUMNS.length }, (_, i) => i);
 
 	let highlighted = $state<Set<string>>(new Set());
-
-	function getEntityAt(x: number, y: number) {
-		return $gameStore.entities.find((e) => e.position.x === x - 1 && e.position.y === y);
-	}
+	let currentTurn = $state<number>($gameStore.turn.currentTurn);
+	$effect(() => {
+		const nextTurn = $gameStore.turn.currentTurn;
+		if (nextTurn > currentTurn) {
+			highlighted = new Set();
+			currentTurn = nextTurn;
+		}
+	});
 
 	function handleEntityInteraction(entityId: EntityId | null) {
 		if (!entityId) return;
-		const state = toggleEntitySelection($gameStore, entityId);
-		gameStore.set(state);
+		gameStore.update(toggleEntitySelection(entityId));
 
-		highlighted = state.entities.find((e) => e.id === entityId)?.state.selected
-			? new Set(getAvailableMoves(state, entityId).map((pos) => `${pos.x}-${pos.y}`))
+		highlighted = $gameStore.entities.find((e) => e.id === entityId)?.state.selected
+			? new Set(getAvailableMoves($gameStore, entityId).map((pos) => `${pos.x}-${pos.y}`))
 			: new Set();
 	}
 
@@ -35,11 +37,15 @@
 
 		const selectedEntityId = getSelectedEntityId($gameStore);
 
-		gameStore.set(moveEntity($gameStore, selectedEntityId, { x: x - 1, y }));
+		gameStore.update(moveEntity(selectedEntityId, { x: x - 1, y }));
 
 		highlighted = new Set(
 			getAvailableMoves($gameStore, selectedEntityId).map((pos) => `${pos.x}-${pos.y}`)
 		);
+	}
+
+	function getEntityAt(x: number, y: number) {
+		return $gameStore.entities.find((e) => e.position.x === x - 1 && e.position.y === y);
 	}
 </script>
 

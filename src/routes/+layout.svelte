@@ -7,7 +7,7 @@
 </script>
 
 <div class="flex-col bg-gray-100 p-4">
-	<header class="flex-col items-start">
+	<header class="flex-col p-4">
 		<h1 class="text-center text-2xl">Welcome to The Tinkekerer's Tournament (TTT)</h1>
 		<p class="text-center italic">
 			Backstage at <a href="https://maeevick.substack.com" target="_blank" class="underline">
@@ -16,11 +16,11 @@
 		</p>
 	</header>
 
-	<main class="grid grid-cols-6 items-center p-4">
+	<main class="grid grid-cols-6 p-4">
 		{@render children()}
 	</main>
 
-	<footer class="flex-col items-start p-4">
+	<footer class="flex-col p-4">
 		<p class="text-center">
 			Made with ❤️ and 😜 by <a
 				href="https://github.com/Maeevick"

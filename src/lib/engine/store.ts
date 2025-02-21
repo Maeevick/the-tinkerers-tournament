@@ -9,8 +9,9 @@ import type { TeamComponent, Team } from '$lib/components/team';
 import type { StateComponent } from '$lib/components/state';
 
 import { ROLE_STATS } from '$lib/components/stats';
+import { INITIAL_TURN, type TurnComponent } from '$lib/components/turn';
 
-export type GameState = {
+type EntitiesComponent = {
 	entities: (Entity &
 		TeamComponent &
 		RoleComponent &
@@ -18,6 +19,9 @@ export type GameState = {
 		StatComponent &
 		StateComponent)[];
 };
+export type GameState = EntitiesComponent & TurnComponent;
+
+export type GameStateUpdater = (state: GameState) => GameState;
 
 const createInitialTeam = (
 	team: Team,
@@ -74,7 +78,8 @@ const createInitialTeam = (
 
 const createInitialState = (): GameState => {
 	return {
-		entities: [...createInitialTeam('home', 2), ...createInitialTeam('away', 23)]
+		entities: [...createInitialTeam('home', 2), ...createInitialTeam('away', 23)],
+		...INITIAL_TURN
 	};
 };
 

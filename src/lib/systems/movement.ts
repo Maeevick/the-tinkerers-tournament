@@ -1,5 +1,5 @@
 import type { EntityId } from '$lib/entities';
-import type { GameState } from '../engine/store';
+import type { GameState, GameStateUpdater } from '../engine/store';
 import { COLUMNS, ROWS } from '$lib/constants/board';
 import type { Position } from '$lib/components/position';
 
@@ -63,27 +63,31 @@ export function getAvailableMoves(state: GameState, entityId: EntityId | null): 
 	);
 }
 
-export function moveEntity(state: GameState, entityId: EntityId | null, to: Position): GameState {
-	if (!entityId) return state;
-	const entity = state.entities.find((e) => e.id === entityId);
-	if (!entity) return state;
+export function moveEntity(entityId: EntityId | null, to: Position): GameStateUpdater {
+	return (state: GameState) => {
+		if (state.turn.currentTurn > state.turn.totalTurns) return state;
+		if (!entityId) return state;
 
-	if (entity.position.x === to.x && entity.position.y === to.y) return state;
+		const entity = state.entities.find((e) => e.id === entityId);
+		if (!entity) return state;
 
-	return {
-		...state,
-		entities: state.entities.map((e) => {
-			if (e.id === entityId) {
-				return {
-					...e,
-					position: to,
-					state: {
-						...e.state,
-						remainingMovement: e.state.remainingMovement - getMoveCost(entity.position, to)
-					}
-				};
-			}
-			return e;
-		})
+		if (entity.position.x === to.x && entity.position.y === to.y) return state;
+
+		return {
+			...state,
+			entities: state.entities.map((e) => {
+				if (e.id === entityId) {
+					return {
+						...e,
+						position: to,
+						state: {
+							...e.state,
+							remainingMovement: e.state.remainingMovement - getMoveCost(entity.position, to)
+						}
+					};
+				}
+				return e;
+			})
+		};
 	};
 }
