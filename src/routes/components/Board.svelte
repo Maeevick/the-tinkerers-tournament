@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { untrack } from 'svelte';
+
 	import { COLUMNS, ROWS } from '$lib/constants/board';
 
 	import type { EntityId } from '$lib/entities';
@@ -13,10 +15,15 @@
 	const FULL_ROWS = Array.from({ length: ROWS.length }, (_, i) => i);
 	const FULL_COLS = Array.from({ length: COLUMNS.length }, (_, i) => i);
 
-	let selectedEntityId = $derived($gameStore.entities.find((e) => e.state.selected)?.id ?? null);
+	let selectedEntity = $derived($gameStore.entities.find((e) => e.state.selected) ?? null);
 	let highlighted = $derived.by((): Set<string> => {
-		return selectedEntityId
-			? new Set(getAvailableMoves($gameStore, selectedEntityId).map((pos) => `${pos.x}-${pos.y}`))
+		return selectedEntity && Number(selectedEntity?.state.remainingMovement) >= 0
+			? new Set(
+					getAvailableMoves(
+						untrack(() => $gameStore),
+						selectedEntity.id
+					).map((pos) => `${pos.x}-${pos.y}`)
+				)
 			: new Set<string>();
 	});
 
