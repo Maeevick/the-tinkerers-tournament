@@ -65,7 +65,7 @@ export function getAvailableMoves(state: GameState, entityId: EntityId | null): 
 
 export function moveEntity(entityId: EntityId | null, to: Position): GameStateUpdater {
 	return (state: GameState) => {
-		if (state.turn.currentTurn > state.turn.totalTurns) return state;
+		if (state.turn.currentTurn >= state.turn.totalTurns) return state;
 		if (!entityId) return state;
 
 		const entity = state.entities.find((e) => e.id === entityId);

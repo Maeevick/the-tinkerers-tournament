@@ -7,7 +7,7 @@ export function getSelectedEntityId(state: GameState): EntityId | null {
 
 export function toggleEntitySelection(entityId: EntityId | null): GameStateUpdater {
 	return (state: GameState) => {
-		if (state.turn.currentTurn > state.turn.totalTurns) return state;
+		if (state.turn.currentTurn >= state.turn.totalTurns) return state;
 		if (!entityId) return state;
 		return {
 			...state,

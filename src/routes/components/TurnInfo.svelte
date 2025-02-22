@@ -1,12 +1,13 @@
 <script lang="ts">
 	import type { Team } from '$lib/components/team';
+	import { COLORS } from '$lib/constants/colors';
 	import { gameStore } from '$lib/engine/store';
 	import { endTurn } from '$lib/systems/turn';
 
-	let { team } = $props<{ team: Team }>();
+	let { team }: { team: Team } = $props<{ team: Team }>();
 
 	let isActive = $derived($gameStore.turn.activeTeam === team);
-	let isOver = $derived($gameStore.turn.currentTurn > $gameStore.turn.totalTurns);
+	let isOver = $derived($gameStore.turn.currentTurn >= $gameStore.turn.totalTurns);
 	let playerNumber = $derived(team === 'home' ? '1' : '2');
 
 	function handleEndTurn() {
@@ -22,11 +23,11 @@
 	</div>
 	{#if !isOver}
 		<div>
-			Turn {$gameStore.turn.currentTurn} / {$gameStore.turn.totalTurns}
+			Turn {Math.floor($gameStore.turn.currentTurn)} / {$gameStore.turn.totalTurns}
 		</div>
 		{#if isActive}
 			<button
-				class="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+				class="rounded {`bg-[${COLORS[team].light}]`} px-4 py-2 text-white"
 				onclick={() => handleEndTurn()}
 			>
 				End Turn
