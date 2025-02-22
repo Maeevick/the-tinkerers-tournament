@@ -13,23 +13,16 @@
 	const FULL_ROWS = Array.from({ length: ROWS.length }, (_, i) => i);
 	const FULL_COLS = Array.from({ length: COLUMNS.length }, (_, i) => i);
 
-	let highlighted = $state<Set<string>>(new Set());
-	let currentTurn = $state<number>($gameStore.turn.currentTurn);
-	$effect(() => {
-		const nextTurn = $gameStore.turn.currentTurn;
-		if (nextTurn > currentTurn) {
-			highlighted = new Set();
-			currentTurn = nextTurn;
-		}
+	let selectedEntityId = $derived($gameStore.entities.find((e) => e.state.selected)?.id ?? null);
+	let highlighted = $derived.by((): Set<string> => {
+		return selectedEntityId
+			? new Set(getAvailableMoves($gameStore, selectedEntityId).map((pos) => `${pos.x}-${pos.y}`))
+			: new Set<string>();
 	});
 
 	function handleEntityInteraction(entityId: EntityId | null) {
 		if (!entityId) return;
 		gameStore.update(toggleEntitySelection(entityId));
-
-		highlighted = $gameStore.entities.find((e) => e.id === entityId)?.state.selected
-			? new Set(getAvailableMoves($gameStore, entityId).map((pos) => `${pos.x}-${pos.y}`))
-			: new Set();
 	}
 
 	function handleCellInteraction({ x, y }: Position) {
@@ -38,10 +31,6 @@
 		const selectedEntityId = getSelectedEntityId($gameStore);
 
 		gameStore.update(moveEntity(selectedEntityId, { x: x - 1, y }));
-
-		highlighted = new Set(
-			getAvailableMoves($gameStore, selectedEntityId).map((pos) => `${pos.x}-${pos.y}`)
-		);
 	}
 
 	function getEntityAt(x: number, y: number) {
