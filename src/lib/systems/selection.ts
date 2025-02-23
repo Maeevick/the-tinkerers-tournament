@@ -5,6 +5,21 @@ export function getSelectedEntityId(state: GameState): EntityId | null {
 	return state.entities.find((e) => e.state.selected)?.id ?? null;
 }
 
+export function resetSelection(): GameStateUpdater {
+	return (state: GameState) => {
+		return {
+			...state,
+			entities: state.entities.map((entity) => ({
+				...entity,
+				state: {
+					...entity.state,
+					selected: false
+				}
+			}))
+		};
+	};
+}
+
 export function toggleEntitySelection(entityId: EntityId | null): GameStateUpdater {
 	return (state: GameState) => {
 		if (state.turn.currentTurn >= state.turn.totalTurns) return state;

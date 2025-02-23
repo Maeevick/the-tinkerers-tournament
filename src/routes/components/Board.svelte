@@ -8,7 +8,11 @@
 	import type { Position } from '$lib/components/position';
 
 	import { getAvailableMoves, moveEntity } from '$lib/systems/movement';
-	import { getSelectedEntityId, toggleEntitySelection } from '$lib/systems/selection';
+	import {
+		getSelectedEntityId,
+		resetSelection,
+		toggleEntitySelection
+	} from '$lib/systems/selection';
 	import { gameStore } from '$lib/engine/store';
 
 	import Cell from './Cell.svelte';
@@ -31,15 +35,17 @@
 
 	function handleEntityInteraction(entityId: EntityId | null) {
 		if (!entityId) return;
-		gameStore.update(toggleEntitySelection(entityId));
+		return gameStore.update(toggleEntitySelection(entityId));
 	}
 
 	function handleCellInteraction({ x, y }: Position) {
-		if (!highlighted.has(`${x - 1}-${y}`)) return;
+		if (!highlighted.has(`${x - 1}-${y}`)) {
+			return gameStore.update(resetSelection());
+		}
 
 		const selectedEntityId = getSelectedEntityId($gameStore);
 
-		gameStore.update(moveEntity(selectedEntityId, { x: x - 1, y }));
+		return gameStore.update(moveEntity(selectedEntityId, { x: x - 1, y }));
 	}
 
 	function getEntityAt(x: number, y: number) {
