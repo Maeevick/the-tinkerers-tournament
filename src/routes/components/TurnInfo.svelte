@@ -19,28 +19,30 @@
 	}
 </script>
 
-<div class="flex flex-1 flex-col justify-items-start space-y-4 p-4">
-	<div class="text-xl font-bold" style:color={isOver || isActive ? COLORS[team].light : '#999'}>
-		Player {player}
-		{#if isActive}is playing{/if}
-		<!-- TODO: Dummy Code until scoring is implemented -->
-		{#if isOver}<div>Game Over!</div>{/if}
-		<!-- -->
-	</div>
-	{#if !isOver}
-		<div>
-			Turn {Math.floor($gameStore.turn.currentTurn)} / {$gameStore.turn.totalTurns}
+<div class="h-50">
+	<div class="flex flex-1 flex-col justify-items-start space-y-4 p-4">
+		<div class="text-xl font-bold" style:color={isOver || isActive ? COLORS[team].light : '#999'}>
+			Player {player}
+			{#if isActive}is playing{/if}
+			<!-- TODO: Dummy Code until scoring is implemented -->
+			{#if isOver}<div>Game Over!</div>{/if}
+			<!-- -->
 		</div>
-		{#if isActive}
-			<div class="flex flex-col gap-2">
-				<Timer {team} />
-				<button
-					class="rounded {`bg-[${COLORS[team].light}]`} px-4 py-2 text-white"
-					onclick={() => handleEndTurn()}
-				>
-					End Turn
-				</button>
+		{#if !isOver}
+			<div>
+				Turn {Math.floor($gameStore.turn.currentTurn)} / {$gameStore.turn.totalTurns}
 			</div>
+			{#if isActive}
+				<div class="flex flex-col gap-2">
+					<Timer {team} />
+					<button
+						class="rounded {`bg-[${COLORS[team].light}]`} px-4 py-2 text-white"
+						onclick={() => handleEndTurn()}
+					>
+						End Turn
+					</button>
+				</div>
+			{/if}
 		{/if}
-	{/if}
+	</div>
 </div>
