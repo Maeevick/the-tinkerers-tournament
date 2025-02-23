@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { untrack } from 'svelte';
 
+	import { COLORS } from '$lib/constants/colors';
 	import { COLUMNS, ROWS } from '$lib/constants/board';
 
 	import type { EntityId } from '$lib/entities';
@@ -53,6 +54,12 @@
 				index={-1}
 				position={{ x: col, y: row }}
 				{highlighted}
+				cursor={selectedEntity && selectedEntity.team === $gameStore.turn.activeTeam
+					? 'pointer'
+					: 'not-allowed'}
+				color={selectedEntity && selectedEntity.team === $gameStore.turn.activeTeam
+					? COLORS[selectedEntity.team].highlight
+					: COLORS.field.highlight}
 				onclick={() => handleCellInteraction({ x: col, y: row })}
 			>
 				{#if row > 0 && row < 25 && col > 0 && col < 11}

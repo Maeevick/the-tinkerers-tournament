@@ -3,15 +3,17 @@
 	import type { Snippet } from 'svelte';
 	import type { MouseEventHandler } from 'svelte/elements';
 
-	import type { Position } from '$lib/components/position';
-
 	import { COLORS } from '$lib/constants/colors';
 	import { COLUMNS, ROWS } from '$lib/constants/board';
 
-	let { index, position, highlighted, children, onclick } = $props<{
+	import type { Position } from '$lib/components/position';
+
+	let { index, position, highlighted, cursor, color, children, onclick } = $props<{
 		index: number;
 		position: Position;
 		highlighted: Set<string>;
+		cursor: string;
+		color: string;
 		children: Snippet;
 		onclick: MouseEventHandler<HTMLDivElement>;
 	}>();
@@ -36,7 +38,7 @@
 	}
 
 	function getCellColor(x: number, y: number, highlighted: boolean): string {
-		if (highlighted) return COLORS.field.highlight;
+		if (highlighted) return color;
 		if (x === 0 || x === 10 || y === 0 || y === 25) return COLORS.stands;
 
 		if (y === 1) {
@@ -71,6 +73,7 @@
 		position.y,
 		isHighlighted(position.x, position.y)
 	)}
+	style:cursor={isHighlighted(position.x, position.y) ? cursor : 'auto'}
 	{onclick}
 >
 	{getCellContent(position.x, position.y)}
