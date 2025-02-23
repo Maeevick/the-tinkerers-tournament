@@ -71,6 +71,8 @@ export function moveEntity(entityId: EntityId | null, to: Position): GameStateUp
 		const entity = state.entities.find((e) => e.id === entityId);
 		if (!entity) return state;
 
+		if (entity.team !== state.turn.activeTeam) return state;
+
 		if (entity.position.x === to.x && entity.position.y === to.y) return state;
 
 		return {
