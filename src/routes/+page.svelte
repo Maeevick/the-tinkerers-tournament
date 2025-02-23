@@ -5,14 +5,14 @@
 </script>
 
 <div class="col-span-1"></div>
-<div class="col-span-1 flex flex-col">
-	<div class="h-50"><TurnInfo team="home" /></div>
+<div class="col-span-1 flex flex-col text-right">
+	<div class="h-50"><TurnInfo team="home" player="1" /></div>
 	<CharacterInfo team="home" />
 </div>
 <div class="col-span-2 flex justify-center">
 	<Board />
 </div>
 <div class="col-span-1 flex flex-col">
-	<div class="h-50"><TurnInfo team="away" /></div>
+	<div class="h-50"><TurnInfo team="away" player="2" /></div>
 	<CharacterInfo team="away" />
 </div>

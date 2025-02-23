@@ -5,6 +5,7 @@
 
 	import type { EntityId } from '$lib/entities';
 	import type { Position } from '$lib/components/position';
+
 	import { getAvailableMoves, moveEntity } from '$lib/systems/movement';
 	import { getSelectedEntityId, toggleEntitySelection } from '$lib/systems/selection';
 	import { gameStore } from '$lib/engine/store';
