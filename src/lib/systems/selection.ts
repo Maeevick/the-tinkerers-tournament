@@ -1,6 +1,8 @@
 import type { GameState, GameStateUpdater } from '$lib/engine/store';
 import type { EntityId } from '$lib/entities';
 
+import { getAvailableMoves } from './movement';
+
 export function getSelectedEntityId(state: GameState): EntityId | null {
 	return state.entities.find((e) => e.state.selected)?.id ?? null;
 }
@@ -30,7 +32,11 @@ export function toggleEntitySelection(entityId: EntityId | null): GameStateUpdat
 				...entity,
 				state: {
 					...entity.state,
-					selected: entity.id === entityId ? !entity.state.selected : false
+					selected: entity.id === entityId ? !entity.state.selected : false,
+					availableMoves:
+						entity.id === entityId && !entity.state.selected
+							? getAvailableMoves(state, entityId)
+							: entity.state.availableMoves
 				}
 			}))
 		};

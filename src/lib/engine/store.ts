@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 
-import type { Entity } from '../entities';
+import type { Entity } from '$lib/entities';
 
 import type { PositionComponent } from '$lib/components/position';
 import type { RoleComponent } from '$lib/components/role';
@@ -38,7 +38,11 @@ const createInitialTeam = (
 			team,
 			role: 'Fighter',
 			position: { x: 3, y: baseRow },
-			state: { selected: false, remainingMovement: ROLE_STATS.Fighter.stats.movement },
+			state: {
+				selected: false,
+				remainingMovement: ROLE_STATS.Fighter.stats.movement,
+				availableMoves: new Map<string, number>()
+			},
 			...ROLE_STATS.Fighter
 		},
 		{
@@ -46,7 +50,11 @@ const createInitialTeam = (
 			team,
 			role: 'Fighter',
 			position: { x: 5, y: baseRow },
-			state: { selected: false, remainingMovement: ROLE_STATS.Fighter.stats.movement },
+			state: {
+				selected: false,
+				remainingMovement: ROLE_STATS.Fighter.stats.movement,
+				availableMoves: new Map<string, number>()
+			},
 			...ROLE_STATS.Fighter
 		},
 		{
@@ -54,7 +62,11 @@ const createInitialTeam = (
 			team,
 			role: 'Runner',
 			position: { x: 1, y: baseRow },
-			state: { selected: false, remainingMovement: ROLE_STATS.Runner.stats.movement },
+			state: {
+				selected: false,
+				remainingMovement: ROLE_STATS.Runner.stats.movement,
+				availableMoves: new Map<string, number>()
+			},
 			...ROLE_STATS.Runner
 		},
 		{
@@ -62,7 +74,11 @@ const createInitialTeam = (
 			team,
 			role: 'Runner',
 			position: { x: 7, y: baseRow },
-			state: { selected: false, remainingMovement: ROLE_STATS.Runner.stats.movement },
+			state: {
+				selected: false,
+				remainingMovement: ROLE_STATS.Runner.stats.movement,
+				availableMoves: new Map<string, number>()
+			},
 			...ROLE_STATS.Runner
 		},
 		{
@@ -70,7 +86,11 @@ const createInitialTeam = (
 			team,
 			role: 'Specialist',
 			position: { x: 4, y: baseRow },
-			state: { selected: false, remainingMovement: ROLE_STATS.Specialist.stats.movement },
+			state: {
+				selected: false,
+				remainingMovement: ROLE_STATS.Specialist.stats.movement,
+				availableMoves: new Map<string, number>()
+			},
 			...ROLE_STATS.Specialist
 		}
 	];

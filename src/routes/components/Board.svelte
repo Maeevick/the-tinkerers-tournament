@@ -7,7 +7,7 @@
 	import type { EntityId } from '$lib/entities';
 	import type { Position } from '$lib/components/position';
 
-	import { getAvailableMoves, moveEntity } from '$lib/systems/movement';
+	import { moveEntity } from '$lib/systems/movement';
 	import {
 		getSelectedEntityId,
 		resetSelection,
@@ -23,13 +23,8 @@
 
 	let selectedEntity = $derived($gameStore.entities.find((e) => e.state.selected) ?? null);
 	let highlighted = $derived.by((): Set<string> => {
-		return selectedEntity && Number(selectedEntity?.state.remainingMovement) >= 0
-			? new Set(
-					getAvailableMoves(
-						untrack(() => $gameStore),
-						selectedEntity.id
-					).map((pos) => `${pos.x}-${pos.y}`)
-				)
+		return selectedEntity && selectedEntity.state.availableMoves
+			? new Set(Array.from(selectedEntity.state.availableMoves.keys()))
 			: new Set<string>();
 	});
 
@@ -43,9 +38,7 @@
 			return gameStore.update(resetSelection());
 		}
 
-		const selectedEntityId = getSelectedEntityId($gameStore);
-
-		return gameStore.update(moveEntity(selectedEntityId, { x: x - 1, y }));
+		return gameStore.update(moveEntity(getSelectedEntityId($gameStore), { x: x - 1, y }));
 	}
 
 	function getEntityAt(x: number, y: number) {
