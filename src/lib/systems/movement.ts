@@ -14,6 +14,7 @@ function initBlockedPositions(
 			.filter(
 				(e) =>
 					e.id !== entity.id &&
+					!e.state.isDead &&
 					Math.abs(e.position.x - entity.position.x) <= entity.state.remainingMovement &&
 					Math.abs(e.position.y - entity.position.y) <= entity.state.remainingMovement
 			)
@@ -69,7 +70,7 @@ export function getAvailableMoves(
 	if (!entityId) return new Map();
 
 	const entity = state.entities.find((e) => e.id === entityId);
-	if (!entity) return new Map();
+	if (!entity || entity.state.isDead) return new Map();
 
 	return exploreMoves(
 		entity.position,
@@ -118,6 +119,7 @@ export function move(entityId: EntityId | null, to: Position): GameStateUpdater 
 		const entity = state.entities.find((e) => e.id === entityId);
 		if (!entity) return state;
 
+		if (entity.state.isDead) return state;
 		if (entity.team !== state.turn.activeTeam) return state;
 		if (entity.position.x === to.x && entity.position.y === to.y) return state;
 		if (!entity.state.availableMoves || !entity.state.availableMoves.has(`${to.x}-${to.y}`))

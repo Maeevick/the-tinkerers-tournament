@@ -5,5 +5,7 @@ export type StateComponent = {
 		availableMoves: Map<string, number>;
 		remainingAttack: number;
 		isDown: boolean;
+		remainingHealth: number;
+		isDead: boolean;
 	};
 };

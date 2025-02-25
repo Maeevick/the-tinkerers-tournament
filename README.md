@@ -46,7 +46,7 @@ The Tinkerer's Tournament is a creative playground exploring (almost) modern web
 - [x] Character info panel
 - [x] Character movement
 - [x] Turn system
-- [ ] Basic combat
+- [x] Basic combat
 - [ ] Pick Up, Pass and Catch
 - [ ] Dodge and Tacle
 - [ ] Victory points

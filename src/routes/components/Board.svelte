@@ -65,17 +65,21 @@
 				{#if row > 0 && row < 25 && col > 0 && col < 11}
 					{#if getEntityAt(col, row)}
 						{@const character = getEntityAt(col, row)}
-						<Character
-							index={-1}
-							team={character!.team}
-							role={character!.role}
-							isSelected={character!.state.selected}
-							isAttackable={!!selectedEntity &&
-								!!character &&
-								canAttack(selectedEntity, character, $gameStore)}
-							isDown={character!.state.isDown}
-							onclick={() => handleEntityInteraction(character!.id)}
-						/>
+						{#if !character!.state.isDead}
+							<Character
+								index={-1}
+								team={character!.team}
+								role={character!.role}
+								isSelected={character!.state.selected}
+								isAttackable={!!selectedEntity &&
+									!!character &&
+									canAttack(selectedEntity, character, $gameStore)}
+								isDown={character!.state.isDown}
+								onclick={() => handleEntityInteraction(character!.id)}
+							/>
+						{:else}
+							<div class="h-full w-full rounded-full bg-red-500 opacity-30"></div>
+						{/if}
 					{/if}
 				{/if}
 			</Cell>

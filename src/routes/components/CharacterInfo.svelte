@@ -38,7 +38,10 @@
 						<div>---</div>
 						<div>Attack: {character!.stats.attack} ({character!.state.remainingAttack})</div>
 						<div>Defense: {character!.stats.defense}</div>
+						<div>Health: {character!.stats.health} ({character!.state.remainingHealth})</div>
+						<div>---</div>
 						<div>Down: {character!.state.isDown}</div>
+						<div>Dead: {character!.state.isDead}</div>
 						<div>---</div>
 					</div>
 				</div>

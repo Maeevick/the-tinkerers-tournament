@@ -15,15 +15,20 @@ export function updateTimer() {
 export function endTurn() {
 	return (state: GameState): GameState => ({
 		...state,
-		entities: state.entities.map((entity) => ({
-			...entity,
-			state: {
-				...entity.state,
-				selected: false,
-				remainingMovement: entity.stats.movement,
-				remainingAttack: 1
+		entities: state.entities.map((entity) => {
+			if (entity.state.isDead) {
+				return entity;
 			}
-		})),
+			return {
+				...entity,
+				state: {
+					...entity.state,
+					selected: false,
+					remainingMovement: entity.stats.movement,
+					remainingAttack: 1
+				}
+			};
+		}),
 		turn: {
 			...state.turn,
 			activeTeam: state.turn.activeTeam === 'home' ? 'away' : 'home',

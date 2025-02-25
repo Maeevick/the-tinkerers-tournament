@@ -43,7 +43,9 @@ const createInitialTeam = (
 				remainingMovement: ROLE_STATS.Fighter.stats.movement,
 				availableMoves: new Map<string, number>(),
 				remainingAttack: 1,
-				isDown: false
+				isDown: false,
+				remainingHealth: ROLE_STATS.Fighter.stats.health,
+				isDead: false
 			},
 			...ROLE_STATS.Fighter
 		},
@@ -57,7 +59,9 @@ const createInitialTeam = (
 				remainingMovement: ROLE_STATS.Fighter.stats.movement,
 				availableMoves: new Map<string, number>(),
 				remainingAttack: 1,
-				isDown: false
+				isDown: false,
+				remainingHealth: ROLE_STATS.Fighter.stats.health,
+				isDead: false
 			},
 			...ROLE_STATS.Fighter
 		},
@@ -71,7 +75,9 @@ const createInitialTeam = (
 				remainingMovement: ROLE_STATS.Runner.stats.movement,
 				availableMoves: new Map<string, number>(),
 				remainingAttack: 1,
-				isDown: false
+				isDown: false,
+				remainingHealth: ROLE_STATS.Runner.stats.health,
+				isDead: false
 			},
 			...ROLE_STATS.Runner
 		},
@@ -85,7 +91,9 @@ const createInitialTeam = (
 				remainingMovement: ROLE_STATS.Runner.stats.movement,
 				availableMoves: new Map<string, number>(),
 				remainingAttack: 1,
-				isDown: false
+				isDown: false,
+				remainingHealth: ROLE_STATS.Runner.stats.health,
+				isDead: false
 			},
 			...ROLE_STATS.Runner
 		},
@@ -99,7 +107,9 @@ const createInitialTeam = (
 				remainingMovement: ROLE_STATS.Specialist.stats.movement,
 				availableMoves: new Map<string, number>(),
 				remainingAttack: 1,
-				isDown: false
+				isDown: false,
+				remainingHealth: ROLE_STATS.Specialist.stats.health,
+				isDead: false
 			},
 			...ROLE_STATS.Specialist
 		}

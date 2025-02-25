@@ -26,8 +26,9 @@ export function canAttack(
 	state: GameState
 ): boolean {
 	return (
-		!!attacker.state.remainingAttack &&
+		!attacker.state.isDead &&
 		!attacker.state.isDown &&
+		!!attacker.state.remainingAttack &&
 		!defenser.state.isDown &&
 		attacker.team !== defenser.team &&
 		attacker.team === state.turn.activeTeam &&
@@ -47,7 +48,7 @@ export function attack(attacker: FightingCharacter, defenser: FightingCharacter)
 			defenser.stats.defense === 0 ? 0 : Math.floor(Math.random() * defenser.stats.defense) + 1;
 
 		const success = attack >= defense;
-
+		const damage = Math.max(0, attack - defense);
 		return {
 			...state,
 			entities: state.entities.map((entity) => {
@@ -62,11 +63,18 @@ export function attack(attacker: FightingCharacter, defenser: FightingCharacter)
 					};
 				}
 				if (entity.id === defenser.id && success) {
+					const remainingHealth = entity.state.remainingHealth - damage;
+					const isDead = remainingHealth <= -5;
 					return {
 						...entity,
 						state: {
 							...entity.state,
-							isDown: true
+							isDown: true,
+							remainingHealth,
+							canRegenIn: 1,
+							isDead,
+							remainingMovement: isDead ? 0 : entity.state.remainingMovement,
+							remainingAttack: isDead ? 0 : entity.state.remainingAttack
 						}
 					};
 				}
