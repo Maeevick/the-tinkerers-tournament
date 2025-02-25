@@ -1,13 +1,11 @@
 <script lang="ts">
-	import { untrack } from 'svelte';
-
 	import { COLORS } from '$lib/constants/colors';
 	import { COLUMNS, ROWS } from '$lib/constants/board';
 
 	import type { EntityId } from '$lib/entities';
 	import type { Position } from '$lib/components/position';
 
-	import { moveEntity } from '$lib/systems/movement';
+	import { move } from '$lib/systems/movement';
 	import {
 		getSelectedEntityId,
 		resetSelection,
@@ -17,6 +15,7 @@
 
 	import Cell from './Cell.svelte';
 	import Character from './Character.svelte';
+	import { attack, canAttack } from '$lib/systems/combat';
 
 	const FULL_ROWS = Array.from({ length: ROWS.length }, (_, i) => i);
 	const FULL_COLS = Array.from({ length: COLUMNS.length }, (_, i) => i);
@@ -28,8 +27,11 @@
 			: new Set<string>();
 	});
 
-	function handleEntityInteraction(entityId: EntityId | null) {
-		if (!entityId) return;
+	function handleEntityInteraction(entityId: EntityId) {
+		const targetEntity = $gameStore.entities.find((e) => e.id === entityId);
+		if (selectedEntity && targetEntity && canAttack(selectedEntity, targetEntity, $gameStore)) {
+			return gameStore.update(attack(selectedEntity, targetEntity));
+		}
 		return gameStore.update(toggleEntitySelection(entityId));
 	}
 
@@ -37,8 +39,7 @@
 		if (!highlighted.has(`${x - 1}-${y}`)) {
 			return gameStore.update(resetSelection());
 		}
-
-		return gameStore.update(moveEntity(getSelectedEntityId($gameStore), { x: x - 1, y }));
+		return gameStore.update(move(getSelectedEntityId($gameStore), { x: x - 1, y }));
 	}
 
 	function getEntityAt(x: number, y: number) {
@@ -69,6 +70,10 @@
 							team={character!.team}
 							role={character!.role}
 							isSelected={character!.state.selected}
+							isAttackable={!!selectedEntity &&
+								!!character &&
+								canAttack(selectedEntity, character, $gameStore)}
+							isDown={character!.state.isDown}
 							onclick={() => handleEntityInteraction(character!.id)}
 						/>
 					{/if}

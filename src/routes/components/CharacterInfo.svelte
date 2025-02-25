@@ -27,9 +27,19 @@
 
 				<div>
 					<span class="font-semibold">Stats:</span>
-					<div class="ml-2">
-						<div>Movement: {character!.stats.movement}</div>
-						<div>Remaining: {character!.state.remainingMovement}</div>
+					<div class="ml-2 text-left">
+						<div>---</div>
+						<div>
+							Movement: {character!.stats.movement} ({Math.max(
+								0,
+								character!.state.remainingMovement - Number(character!.state.isDown)
+							)})
+						</div>
+						<div>---</div>
+						<div>Attack: {character!.stats.attack} ({character!.state.remainingAttack})</div>
+						<div>Defense: {character!.stats.defense}</div>
+						<div>Down: {character!.state.isDown}</div>
+						<div>---</div>
 					</div>
 				</div>
 

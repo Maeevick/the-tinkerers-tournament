@@ -1,7 +1,7 @@
 import type { GameState, GameStateUpdater } from '$lib/engine/store';
 import type { EntityId } from '$lib/entities';
 
-import { getAvailableMoves } from './movement';
+import { getAvailableMoves } from '$lib/systems/movement';
 
 export function getSelectedEntityId(state: GameState): EntityId | null {
 	return state.entities.find((e) => e.state.selected)?.id ?? null;

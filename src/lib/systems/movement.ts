@@ -76,7 +76,7 @@ export function getAvailableMoves(
 		entity.position,
 		initBlockedPositions(state, entity),
 		initCostPerMove(entity.position),
-		entity.state.remainingMovement
+		Math.max(0, entity.state.remainingMovement - Number(entity.state.isDown))
 	);
 }
 
@@ -98,7 +98,8 @@ function computeNextAvailableMoves(
 									state: {
 										...e.state,
 										remainingMovement,
-										availableMoves: new Map<string, number>()
+										availableMoves: new Map<string, number>(),
+										isDown: false
 									}
 								}
 							: e;
@@ -109,7 +110,7 @@ function computeNextAvailableMoves(
 		: new Map<string, number>();
 }
 
-export function moveEntity(entityId: EntityId | null, to: Position): GameStateUpdater {
+export function move(entityId: EntityId | null, to: Position): GameStateUpdater {
 	return (state: GameState) => {
 		if (state.turn.currentTurn >= state.turn.totalTurns) return state;
 		if (!entityId) return state;
@@ -123,7 +124,9 @@ export function moveEntity(entityId: EntityId | null, to: Position): GameStateUp
 			return state;
 
 		const remainingMovement =
-			entity.state.remainingMovement - (entity.state.availableMoves.get(`${to.x}-${to.y}`) ?? 0);
+			entity.state.remainingMovement -
+			(entity.state.availableMoves.get(`${to.x}-${to.y}`) ?? 0) -
+			Number(entity.state.isDown);
 
 		return {
 			...state,
@@ -135,7 +138,8 @@ export function moveEntity(entityId: EntityId | null, to: Position): GameStateUp
 							state: {
 								...entity.state,
 								remainingMovement,
-								availableMoves: computeNextAvailableMoves(state, to, entityId, remainingMovement)
+								availableMoves: computeNextAvailableMoves(state, to, entityId, remainingMovement),
+								isDown: false
 							}
 						}
 					: entity;

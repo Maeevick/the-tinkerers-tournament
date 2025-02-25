@@ -41,7 +41,9 @@ const createInitialTeam = (
 			state: {
 				selected: false,
 				remainingMovement: ROLE_STATS.Fighter.stats.movement,
-				availableMoves: new Map<string, number>()
+				availableMoves: new Map<string, number>(),
+				remainingAttack: 1,
+				isDown: false
 			},
 			...ROLE_STATS.Fighter
 		},
@@ -53,7 +55,9 @@ const createInitialTeam = (
 			state: {
 				selected: false,
 				remainingMovement: ROLE_STATS.Fighter.stats.movement,
-				availableMoves: new Map<string, number>()
+				availableMoves: new Map<string, number>(),
+				remainingAttack: 1,
+				isDown: false
 			},
 			...ROLE_STATS.Fighter
 		},
@@ -65,7 +69,9 @@ const createInitialTeam = (
 			state: {
 				selected: false,
 				remainingMovement: ROLE_STATS.Runner.stats.movement,
-				availableMoves: new Map<string, number>()
+				availableMoves: new Map<string, number>(),
+				remainingAttack: 1,
+				isDown: false
 			},
 			...ROLE_STATS.Runner
 		},
@@ -77,7 +83,9 @@ const createInitialTeam = (
 			state: {
 				selected: false,
 				remainingMovement: ROLE_STATS.Runner.stats.movement,
-				availableMoves: new Map<string, number>()
+				availableMoves: new Map<string, number>(),
+				remainingAttack: 1,
+				isDown: false
 			},
 			...ROLE_STATS.Runner
 		},
@@ -89,7 +97,9 @@ const createInitialTeam = (
 			state: {
 				selected: false,
 				remainingMovement: ROLE_STATS.Specialist.stats.movement,
-				availableMoves: new Map<string, number>()
+				availableMoves: new Map<string, number>(),
+				remainingAttack: 1,
+				isDown: false
 			},
 			...ROLE_STATS.Specialist
 		}

@@ -20,7 +20,8 @@ export function endTurn() {
 			state: {
 				...entity.state,
 				selected: false,
-				remainingMovement: entity.stats.movement
+				remainingMovement: entity.stats.movement,
+				remainingAttack: 1
 			}
 		})),
 		turn: {
