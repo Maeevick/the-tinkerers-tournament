@@ -3,10 +3,6 @@ import type { EntityId } from '$lib/entities';
 
 import { getAvailableMoves } from '$lib/systems/movement';
 
-export function getSelectedEntityId(state: GameState): EntityId | null {
-	return state.entities.find((e) => e.state.selected)?.id ?? null;
-}
-
 export function resetSelection(): GameStateUpdater {
 	return (state: GameState) => {
 		return {

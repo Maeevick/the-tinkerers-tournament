@@ -1,21 +1,18 @@
 <script lang="ts">
-	import { COLORS } from '$lib/constants/colors';
-	import { COLUMNS, ROWS } from '$lib/constants/board';
-
 	import type { EntityId } from '$lib/entities';
 	import type { Position } from '$lib/components/position';
 
-	import { move } from '$lib/systems/movement';
-	import {
-		getSelectedEntityId,
-		resetSelection,
-		toggleEntitySelection
-	} from '$lib/systems/selection';
+	import { COLORS } from '$lib/constants/colors';
+	import { COLUMNS, ROWS } from '$lib/constants/board';
+
 	import { gameStore } from '$lib/engine/store';
+
+	import { resetSelection, toggleEntitySelection } from '$lib/systems/selection';
+	import { move, standUp } from '$lib/systems/movement';
+	import { attack, canAttack } from '$lib/systems/combat';
 
 	import Cell from './Cell.svelte';
 	import Character from './Character.svelte';
-	import { attack, canAttack } from '$lib/systems/combat';
 
 	const FULL_ROWS = Array.from({ length: ROWS.length }, (_, i) => i);
 	const FULL_COLS = Array.from({ length: COLUMNS.length }, (_, i) => i);
@@ -32,6 +29,9 @@
 		if (selectedEntity && targetEntity && canAttack(selectedEntity, targetEntity, $gameStore)) {
 			return gameStore.update(attack(selectedEntity, targetEntity));
 		}
+		if (selectedEntity?.id === entityId && selectedEntity.state.isDown) {
+			return gameStore.update(standUp(entityId));
+		}
 		return gameStore.update(toggleEntitySelection(entityId));
 	}
 
@@ -39,7 +39,7 @@
 		if (!highlighted.has(`${x - 1}-${y}`)) {
 			return gameStore.update(resetSelection());
 		}
-		return gameStore.update(move(getSelectedEntityId($gameStore), { x: x - 1, y }));
+		return gameStore.update(move(selectedEntity?.id ?? null, { x: x - 1, y }));
 	}
 
 	function getEntityAt(x: number, y: number) {
@@ -54,7 +54,9 @@
 				index={-1}
 				position={{ x: col, y: row }}
 				{highlighted}
-				cursor={selectedEntity && selectedEntity.team === $gameStore.turn.activeTeam
+				cursor={selectedEntity &&
+				selectedEntity.team === $gameStore.turn.activeTeam &&
+				!selectedEntity.state.isDown
 					? 'pointer'
 					: 'not-allowed'}
 				color={selectedEntity && selectedEntity.team === $gameStore.turn.activeTeam

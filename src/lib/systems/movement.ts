@@ -149,3 +149,33 @@ export function move(entityId: EntityId | null, to: Position): GameStateUpdater 
 		};
 	};
 }
+
+export function standUp(entityId: EntityId): GameStateUpdater {
+	return (state: GameState) => {
+		if (state.turn.currentTurn >= state.turn.totalTurns) return state;
+
+		const entity = state.entities.find((e) => e.id === entityId);
+		if (!entity) return state;
+		if (!entity.state.isDown) return state;
+		if (entity.state.isDead) return state;
+		if (entity.team !== state.turn.activeTeam) return state;
+		if (entity.state.remainingMovement < 1) return state;
+
+		return {
+			...state,
+			entities: state.entities.map((entity) => {
+				if (entity.id !== entityId) {
+					return entity;
+				}
+				return {
+					...entity,
+					state: {
+						...entity.state,
+						remainingMovement: entity.state.remainingMovement - 1,
+						isDown: false
+					}
+				};
+			})
+		};
+	};
+}
