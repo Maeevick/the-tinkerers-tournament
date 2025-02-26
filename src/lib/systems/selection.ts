@@ -22,10 +22,10 @@ export function resetSelection(): GameStateUpdater {
 	};
 }
 
-export function toggleEntitySelection(entityId: EntityId | null): GameStateUpdater {
+export function toggleEntitySelection(entityId: EntityId): GameStateUpdater {
 	return (state: GameState) => {
 		if (state.turn.currentTurn >= state.turn.totalTurns) return state;
-		if (!entityId) return state;
+
 		return {
 			...state,
 			entities: state.entities.map((entity) => ({
