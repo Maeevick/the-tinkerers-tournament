@@ -149,7 +149,10 @@ export function move(entityId: EntityId | null, to: Position): GameStateUpdater 
 							}
 						}
 					: entity;
-			})
+			}),
+			thingy: state.entities.find((e) => e.id === entityId && e.state.isCarrier)
+				? { ...state.thingy, position: to }
+				: state.thingy
 		};
 	};
 }

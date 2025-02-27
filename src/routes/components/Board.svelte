@@ -98,6 +98,7 @@
 									!!character &&
 									canAttack(selectedEntity, character, $gameStore)}
 								isDown={character!.state.isDown}
+								isCarrier={character!.state.isCarrier}
 								onclick={() => handleEntityInteraction(character!.id)}
 							/>
 						{:else}

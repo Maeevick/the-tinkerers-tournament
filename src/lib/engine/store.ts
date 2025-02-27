@@ -47,7 +47,8 @@ const createInitialTeam = (
 				remainingAttack: 1,
 				isDown: false,
 				remainingHealth: ROLE_STATS.Fighter.stats.health,
-				isDead: false
+				isDead: false,
+				isCarrier: false
 			},
 			...ROLE_STATS.Fighter
 		},
@@ -63,7 +64,8 @@ const createInitialTeam = (
 				remainingAttack: 1,
 				isDown: false,
 				remainingHealth: ROLE_STATS.Fighter.stats.health,
-				isDead: false
+				isDead: false,
+				isCarrier: false
 			},
 			...ROLE_STATS.Fighter
 		},
@@ -79,7 +81,8 @@ const createInitialTeam = (
 				remainingAttack: 1,
 				isDown: false,
 				remainingHealth: ROLE_STATS.Runner.stats.health,
-				isDead: false
+				isDead: false,
+				isCarrier: false
 			},
 			...ROLE_STATS.Runner
 		},
@@ -95,7 +98,8 @@ const createInitialTeam = (
 				remainingAttack: 1,
 				isDown: false,
 				remainingHealth: ROLE_STATS.Runner.stats.health,
-				isDead: false
+				isDead: false,
+				isCarrier: false
 			},
 			...ROLE_STATS.Runner
 		},
@@ -111,7 +115,8 @@ const createInitialTeam = (
 				remainingAttack: 1,
 				isDown: false,
 				remainingHealth: ROLE_STATS.Specialist.stats.health,
-				isDead: false
+				isDead: false,
+				isCarrier: false
 			},
 			...ROLE_STATS.Specialist
 		}

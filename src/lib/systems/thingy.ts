@@ -6,6 +6,7 @@ import type { TeamComponent } from '$lib/components/team';
 import type { GameState, GameStateUpdater } from '$lib/engine/store';
 import type { Entity, EntityId } from '$lib/entities';
 
+// I know I have already this type in combat.ts but WET until I know what to do with it ;-)
 type PickingCharacter = Entity &
 	TeamComponent &
 	RoleComponent &
@@ -13,7 +14,7 @@ type PickingCharacter = Entity &
 	StatComponent &
 	StateComponent;
 
-// I know I have already this function more or less in combat.ts but WET uni-til I know what to do with it ;-)
+// I know I have already this function more or less in combat.ts but WET until I know what to do with it ;-)
 function getManathanDistance(entityPosition: Position, thingyPosition: Position): number {
 	return (
 		Math.abs(entityPosition.x - thingyPosition.x) + Math.abs(entityPosition.y - thingyPosition.y)
@@ -53,12 +54,27 @@ export function pickup(entityId: EntityId | null): GameStateUpdater {
 		const pickup =
 			entity.stats.dexterity === 0 ? 0 : Math.floor(Math.random() * entity.stats.dexterity) + 1;
 
+		const isSuccess = pickup >= dd;
+
 		return {
 			...state,
 			thingy: {
 				...state.thingy,
-				carrierId: pickup >= dd ? entityId : null
-			}
+				carrierId: isSuccess ? entityId : null,
+				position: isSuccess ? entity.position : state.thingy.position
+			},
+			entities: state.entities.map((entity) => {
+				if (entity.id === entityId) {
+					return {
+						...entity,
+						state: {
+							...entity.state,
+							isCarrier: isSuccess
+						}
+					};
+				}
+				return entity;
+			})
 		};
 	};
 }

@@ -7,5 +7,6 @@ export type StateComponent = {
 		isDown: boolean;
 		remainingHealth: number;
 		isDead: boolean;
+		isCarrier: boolean;
 	};
 };
