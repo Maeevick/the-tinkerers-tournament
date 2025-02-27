@@ -4,6 +4,7 @@ export type Stats = {
 	movement: number;
 	attack: number;
 	defense: number;
+	dexterity: number;
 	health: number;
 };
 
@@ -12,7 +13,7 @@ export type StatComponent = {
 };
 
 export const ROLE_STATS: Record<Role, StatComponent> = {
-	Fighter: { stats: { movement: 3, attack: 4, defense: 4, health: 10 } },
-	Runner: { stats: { movement: 5, attack: 3, defense: 2, health: 8 } },
-	Specialist: { stats: { movement: 3, attack: 0, defense: 2, health: 6 } }
+	Fighter: { stats: { movement: 3, attack: 4, defense: 4, health: 10, dexterity: 0 } },
+	Runner: { stats: { movement: 5, attack: 3, defense: 2, health: 8, dexterity: 3 } },
+	Specialist: { stats: { movement: 3, attack: 0, defense: 2, health: 6, dexterity: 4 } }
 };

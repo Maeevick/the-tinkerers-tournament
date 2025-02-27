@@ -13,6 +13,8 @@
 
 	import Cell from './Cell.svelte';
 	import Character from './Character.svelte';
+	import Thingy from './Thingy.svelte';
+	import { canPickup, pickup } from '$lib/systems/thingy';
 
 	const FULL_ROWS = Array.from({ length: ROWS.length }, (_, i) => i);
 	const FULL_COLS = Array.from({ length: COLUMNS.length }, (_, i) => i);
@@ -36,8 +38,18 @@
 	}
 
 	function handleCellInteraction({ x, y }: Position) {
-		if (!highlighted.has(`${x - 1}-${y}`)) {
+		if (
+			!highlighted.has(`${x - 1}-${y}`) &&
+			!(x - 1 === $gameStore.thingy.position.x && y === $gameStore.thingy.position.y)
+		) {
 			return gameStore.update(resetSelection());
+		}
+		if (
+			selectedEntity &&
+			x - 1 === $gameStore.thingy.position.x &&
+			y === $gameStore.thingy.position.y
+		) {
+			return gameStore.update(pickup(selectedEntity.id));
 		}
 		return gameStore.update(move(selectedEntity?.id ?? null, { x: x - 1, y }));
 	}
@@ -65,6 +77,18 @@
 				onclick={() => handleCellInteraction({ x: col, y: row })}
 			>
 				{#if row > 0 && row < 25 && col > 0 && col < 11}
+					{#if $gameStore.thingy.carrierId === null && $gameStore.thingy.position.x === col - 1 && $gameStore.thingy.position.y === row}
+						<!-- svelte-ignore a11y_click_events_have_key_events (keyboard support is not planned yet) -->
+						<div
+							role="gridcell"
+							tabindex="-1"
+							style:cursor={selectedEntity && canPickup(selectedEntity, $gameStore)
+								? 'grab'
+								: 'auto'}
+						>
+							<Thingy />
+						</div>
+					{/if}
 					{#if getEntityAt(col, row)}
 						{@const character = getEntityAt(col, row)}
 						{#if !character!.state.isDead}

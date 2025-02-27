@@ -39,7 +39,7 @@
 
 	function getCellColor(x: number, y: number, highlighted: boolean): string {
 		if (highlighted) return color;
-		if (x === 0 || x === 10 || y === 0 || y === 25) return COLORS.stands;
+		if (x === 0 || x === 10 || y === 0 || y === 24) return COLORS.stands;
 
 		if (y === 1) {
 			const label = COLUMNS[x];
@@ -48,7 +48,7 @@
 			return COLORS.home.light;
 		}
 
-		if (y === 24) {
+		if (y === 23) {
 			const label = COLUMNS[x];
 			if (label === 'C' || label === 'G') return COLORS.stands;
 			if (label === 'D' || label === 'E' || label === 'F') return COLORS.away.dark;

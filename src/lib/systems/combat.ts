@@ -64,7 +64,7 @@ export function attack(attacker: FightingCharacter, defenser: FightingCharacter)
 				}
 				if (entity.id === defenser.id && success) {
 					const remainingHealth = entity.state.remainingHealth - damage;
-					const isDead = remainingHealth <= -5;
+					const isDead = remainingHealth <= -1;
 					return {
 						...entity,
 						state: {

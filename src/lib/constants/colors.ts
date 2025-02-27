@@ -9,6 +9,10 @@ export type Colors = {
 		light: string;
 		dark: string;
 	};
+	thingy: {
+		light: string;
+		dark: string;
+	};
 	field: {
 		highlight: string;
 		light: string;
@@ -31,6 +35,10 @@ export const COLORS: Colors = {
 		light: '#9db167',
 		dark: '#7a8c52',
 		highlight: '#cbd5e0'
+	},
+	thingy: {
+		light: '#ffa680',
+		dark: '#ff6b2c'
 	},
 	stands: '#f0f0f0'
 };

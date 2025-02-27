@@ -45,7 +45,7 @@ describe('GameState Initialization', () => {
 			const awayTeam = state.entities.filter((e) => e.team === 'away');
 
 			awayTeam.forEach((entity) => {
-				expect(entity.position.y).toBe(23);
+				expect(entity.position.y).toBe(22);
 			});
 		});
 	});

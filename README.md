@@ -47,7 +47,8 @@ The Tinkerer's Tournament is a creative playground exploring (almost) modern web
 - [x] Character movement
 - [x] Turn system
 - [x] Basic combat
-- [ ] Pick Up, Pass and Catch
+- [x] Pick Up (the thingy: not a ball, not a frisbee, not defined)
+- [ ] Pass and Catch
 - [ ] Dodge and Tacle
 - [ ] Victory points
 - [ ] Special actions

@@ -23,7 +23,6 @@ export const ROWS = [
 	'21',
 	'22',
 	'23',
-	'24',
 	''
 ];
 export const COLUMNS = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', ''];

@@ -9,7 +9,9 @@ import type { TeamComponent, Team } from '$lib/components/team';
 import type { StateComponent } from '$lib/components/state';
 
 import { ROLE_STATS } from '$lib/components/stats';
+
 import { INITIAL_TURN, type TurnComponent } from '$lib/components/turn';
+import { INITIAL_THINGY, type ThingyComponent } from '$lib/components/thingy';
 
 type EntitiesComponent = {
 	entities: (Entity &
@@ -19,7 +21,7 @@ type EntitiesComponent = {
 		StatComponent &
 		StateComponent)[];
 };
-export type GameState = EntitiesComponent & TurnComponent;
+export type GameState = EntitiesComponent & TurnComponent & ThingyComponent;
 
 export type GameStateUpdater = (state: GameState) => GameState;
 
@@ -85,7 +87,7 @@ const createInitialTeam = (
 			id: `${team[0]}4`,
 			team,
 			role: 'Runner',
-			position: { x: 7, y: baseRow },
+			position: { x: team === 'home' ? 4 : 7, y: team === 'home' ? 11 : baseRow },
 			state: {
 				selected: false,
 				remainingMovement: ROLE_STATS.Runner.stats.movement,
@@ -118,8 +120,9 @@ const createInitialTeam = (
 
 const createInitialState = (): GameState => {
 	return {
-		entities: [...createInitialTeam('home', 2), ...createInitialTeam('away', 23)],
-		...INITIAL_TURN
+		entities: [...createInitialTeam('home', 2), ...createInitialTeam('away', 22)],
+		...INITIAL_TURN,
+		...INITIAL_THINGY
 	};
 };
 

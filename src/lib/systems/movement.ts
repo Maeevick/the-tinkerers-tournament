@@ -9,8 +9,11 @@ function initBlockedPositions(
 	state: GameState,
 	entity: Entity & PositionComponent & StateComponent
 ) {
-	return new Set(
-		state.entities
+	return new Set([
+		...(state.thingy.carrierId === null
+			? [`${state.thingy.position.x}-${state.thingy.position.y}`]
+			: []),
+		...state.entities
 			.filter(
 				(e) =>
 					e.id !== entity.id &&
@@ -19,7 +22,7 @@ function initBlockedPositions(
 					Math.abs(e.position.y - entity.position.y) <= entity.state.remainingMovement
 			)
 			.map((e) => `${e.position.x}-${e.position.y}`)
-	);
+	]);
 }
 
 function initCostPerMove({ x, y }: Position) {
@@ -119,6 +122,7 @@ export function move(entityId: EntityId | null, to: Position): GameStateUpdater 
 		const entity = state.entities.find((e) => e.id === entityId);
 		if (!entity) return state;
 
+		if (entity.state.isDown) return state;
 		if (entity.state.isDead) return state;
 		if (entity.team !== state.turn.activeTeam) return state;
 		if (entity.position.x === to.x && entity.position.y === to.y) return state;
