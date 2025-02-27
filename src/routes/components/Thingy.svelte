@@ -1,7 +1,4 @@
 <script lang="ts">
-	/* eslint svelte/no-unused-svelte-ignore: "warn" */
-	import type { MouseEventHandler } from 'svelte/elements';
-
 	import { COLORS } from '$lib/constants/colors';
 </script>
 

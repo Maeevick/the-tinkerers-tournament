@@ -78,10 +78,7 @@
 			>
 				{#if row > 0 && row < 25 && col > 0 && col < 11}
 					{#if $gameStore.thingy.carrierId === null && $gameStore.thingy.position.x === col - 1 && $gameStore.thingy.position.y === row}
-						<!-- svelte-ignore a11y_click_events_have_key_events (keyboard support is not planned yet) -->
 						<div
-							role="gridcell"
-							tabindex="-1"
 							style:cursor={selectedEntity && canPickup(selectedEntity, $gameStore)
 								? 'grab'
 								: 'auto'}

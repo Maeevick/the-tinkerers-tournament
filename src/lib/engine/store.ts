@@ -87,7 +87,7 @@ const createInitialTeam = (
 			id: `${team[0]}4`,
 			team,
 			role: 'Runner',
-			position: { x: team === 'home' ? 4 : 7, y: team === 'home' ? 11 : baseRow },
+			position: { x: 7, y: baseRow },
 			state: {
 				selected: false,
 				remainingMovement: ROLE_STATS.Runner.stats.movement,
