@@ -51,6 +51,11 @@
 					<div class="ml-2">
 						x: {character!.position.x}, y: {character!.position.y}
 					</div>
+					<div class="ml-2">
+						<div>---</div>
+						<div>Thingy: carried by {$gameStore.thingy.carrierId}</div>
+						<div>x: {$gameStore.thingy.position.x}, y: {$gameStore.thingy.position.y}</div>
+					</div>
 				</div>
 			</div>
 		</div>
