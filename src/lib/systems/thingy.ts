@@ -21,6 +21,84 @@ function getManathanDistance(entityPosition: Position, thingyPosition: Position)
 	);
 }
 
+function isPositionBlocked(state: GameState, pos: Position) {
+	if (pos.x < 0 || pos.x >= 9 || pos.y <= 1 || pos.y >= 23) return true;
+
+	return state.entities.some(
+		(e) => !e.state.isDead && e.position.x === pos.x && e.position.y === pos.y
+	);
+}
+
+function findFreePositionFromCenter(state: GameState) {
+	const centerX = 5;
+	const centerY = 12;
+
+	for (let radius = 1; radius < 4; radius++) {
+		for (let dx = -radius; dx <= radius; dx++) {
+			const pos = { x: centerX + dx, y: centerY - radius };
+			if (!isPositionBlocked(state, pos)) {
+				return pos;
+			}
+		}
+
+		for (let dy = -radius + 1; dy <= radius; dy++) {
+			const pos = { x: centerX + radius, y: centerY + dy };
+			if (!isPositionBlocked(state, pos)) {
+				return pos;
+			}
+		}
+
+		for (let dx = radius - 1; dx >= -radius; dx--) {
+			const pos = { x: centerX + dx, y: centerY + radius };
+			if (!isPositionBlocked(state, pos)) {
+				return pos;
+			}
+		}
+
+		for (let dy = radius - 1; dy >= -radius + 1; dy--) {
+			const pos = { x: centerX - radius, y: centerY + dy };
+			if (!isPositionBlocked(state, pos)) {
+				return pos;
+			}
+		}
+	}
+	return { x: centerX, y: centerY };
+}
+
+function bounce(state: GameState, pos: Position): Position {
+	const DIRECTIONS = [
+		{ x: -1, y: -1 },
+		{ x: 0, y: -1 },
+		{ x: 1, y: -1 },
+		{ x: -1, y: 0 },
+		{ x: 1, y: 0 },
+		{ x: -1, y: 1 },
+		{ x: 0, y: 1 },
+		{ x: 1, y: 1 }
+	];
+
+	const bounceDirection = DIRECTIONS[Math.floor(Math.random() * 8)];
+	const bouncePosition = {
+		x: pos.x + bounceDirection.x,
+		y: pos.y + bounceDirection.y
+	};
+
+	let count = 0;
+	const MAX_BOUNCE_TRY = 10;
+	while (isPositionBlocked(state, bouncePosition) && count < MAX_BOUNCE_TRY) {
+		const newBounceDirection = DIRECTIONS[Math.floor(Math.random() * 8)];
+
+		bouncePosition.x = bouncePosition.x + newBounceDirection.x;
+		bouncePosition.y = bouncePosition.y + newBounceDirection.y;
+
+		count++;
+	}
+	if (count >= MAX_BOUNCE_TRY) {
+		return findFreePositionFromCenter(state);
+	}
+	return bouncePosition;
+}
+
 export function canPickup(entity: PickingCharacter, state: GameState) {
 	return (
 		entity.team === state.turn.activeTeam &&
@@ -55,13 +133,12 @@ export function pickup(entityId: EntityId | null): GameStateUpdater {
 			entity.stats.dexterity === 0 ? 0 : Math.floor(Math.random() * entity.stats.dexterity) + 1;
 
 		const isSuccess = pickup >= dd;
-
 		return {
 			...state,
 			thingy: {
 				...state.thingy,
 				carrierId: isSuccess ? entityId : null,
-				position: isSuccess ? entity.position : state.thingy.position
+				position: isSuccess ? entity.position : bounce(state, state.thingy.position)
 			},
 			entities: state.entities.map((entity) => {
 				if (entity.id === entityId) {

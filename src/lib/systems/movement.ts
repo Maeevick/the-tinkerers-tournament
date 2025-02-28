@@ -10,9 +10,6 @@ function initBlockedPositions(
 	entity: Entity & PositionComponent & StateComponent
 ) {
 	return new Set([
-		...(state.thingy.carrierId === null
-			? [`${state.thingy.position.x}-${state.thingy.position.y}`]
-			: []),
 		...state.entities
 			.filter(
 				(e) =>

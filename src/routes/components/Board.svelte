@@ -19,10 +19,13 @@
 	const FULL_ROWS = Array.from({ length: ROWS.length }, (_, i) => i);
 	const FULL_COLS = Array.from({ length: COLUMNS.length }, (_, i) => i);
 
+	let thingyKey = $derived(`${$gameStore.thingy.position.x}-${$gameStore.thingy.position.y}`);
 	let selectedEntity = $derived($gameStore.entities.find((e) => e.state.selected) ?? null);
 	let highlighted = $derived.by((): Set<string> => {
 		return selectedEntity && selectedEntity.state.availableMoves
-			? new Set(Array.from(selectedEntity.state.availableMoves.keys()))
+			? new Set(
+					Array.from(selectedEntity.state.availableMoves.keys().filter((key) => key !== thingyKey))
+				)
 			: new Set<string>();
 	});
 
