@@ -7,7 +7,7 @@ import type { GameState, GameStateUpdater } from '$lib/engine/store';
 import type { Entity, EntityId } from '$lib/entities';
 
 // I know I have already this type in combat.ts but WET until I know what to do with it ;-)
-type PickingCharacter = Entity &
+type Character = Entity &
 	TeamComponent &
 	RoleComponent &
 	PositionComponent &
@@ -99,7 +99,18 @@ function bounce(state: GameState, pos: Position): Position {
 	return bouncePosition;
 }
 
-export function canPickup(entity: PickingCharacter, state: GameState) {
+function getAdjacentOpponentCount(state: GameState, entity: Character) {
+	return state.entities.filter((e) => {
+		return (
+			e.team !== state.turn.activeTeam &&
+			!e.state.isDown &&
+			!e.state.isDead &&
+			getManathanDistance(entity.position, e.position) === 1
+		);
+	}).length;
+}
+
+export function canPickup(entity: Character, state: GameState) {
 	return (
 		entity.team === state.turn.activeTeam &&
 		!entity.state.isDead &&
@@ -119,15 +130,7 @@ export function pickup(entityId: EntityId | null): GameStateUpdater {
 
 		if (!canPickup(entity, state)) return state;
 
-		const dd =
-			state.entities.filter((e) => {
-				return (
-					e.team !== state.turn.activeTeam &&
-					!e.state.isDown &&
-					!e.state.isDead &&
-					getManathanDistance(entity.position, e.position) === 1
-				);
-			}).length + 2;
+		const dd = getAdjacentOpponentCount(state, entity) + 1;
 
 		const pickup =
 			entity.stats.dexterity === 0 ? 0 : Math.floor(Math.random() * entity.stats.dexterity) + 1;
@@ -146,7 +149,24 @@ export function pickup(entityId: EntityId | null): GameStateUpdater {
 						...entity,
 						state: {
 							...entity.state,
-							isCarrier: isSuccess
+							isCarrier: isSuccess,
+							availableReceivers: getAvailableReceivers(
+								{
+									...state,
+									entities: state.entities.map((e) => {
+										return e.id === entityId
+											? {
+													...e,
+													state: {
+														...e.state,
+														isCarrier: isSuccess
+													}
+												}
+											: e;
+									})
+								},
+								entity.id
+							)
 						}
 					};
 				}
@@ -154,4 +174,17 @@ export function pickup(entityId: EntityId | null): GameStateUpdater {
 			})
 		};
 	};
+}
+
+export function getAvailableReceivers(state: GameState, entityId: EntityId): Set<string> {
+	const entity = state.entities.find((e) => e.id === entityId);
+	if (!entity || !entity.state.isCarrier) return new Set();
+
+	return new Set(
+		state.entities
+			.filter(
+				(e) => e.team === entity.team && !e.state.isDead && !e.state.isDown && e.id !== entity.id
+			)
+			.map((e) => e.id)
+	);
 }

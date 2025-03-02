@@ -2,6 +2,7 @@ import type { GameState, GameStateUpdater } from '$lib/engine/store';
 import type { EntityId } from '$lib/entities';
 
 import { getAvailableMoves } from '$lib/systems/movement';
+import { getAvailableReceivers } from '$lib/systems/thingy';
 
 export function resetSelection(): GameStateUpdater {
 	return (state: GameState) => {
@@ -32,7 +33,11 @@ export function toggleEntitySelection(entityId: EntityId): GameStateUpdater {
 					availableMoves:
 						entity.id === entityId && !entity.state.selected
 							? getAvailableMoves(state, entityId)
-							: entity.state.availableMoves
+							: entity.state.availableMoves,
+					availableReceivers:
+						entity.id === entityId && !entity.state.selected && entity.state.isCarrier
+							? getAvailableReceivers(state, entityId)
+							: new Set()
 				}
 			}))
 		};

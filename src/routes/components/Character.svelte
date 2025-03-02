@@ -5,14 +5,25 @@
 	import type { Role } from '$lib/components/role';
 	import type { Team } from '$lib/components/team';
 
-	let { index, team, role, isSelected, isAttackable, isDown, isCarrier, onclick } = $props<{
+	let {
+		index,
+		team,
+		role,
+		isSelected,
+		isPotentialTarget,
+		isDown,
+		isCarrier,
+		isPotentialReceiver,
+		onclick
+	} = $props<{
 		index: number;
 		team: Team;
 		role: Role;
 		isSelected: boolean;
-		isAttackable: boolean;
+		isPotentialTarget: boolean;
 		isDown: boolean;
 		isCarrier: boolean;
+		isPotentialReceiver: boolean;
 		onclick: MouseEventHandler<HTMLDivElement>;
 	}>();
 
@@ -30,17 +41,18 @@
 	function getCharacterStyle(
 		team: Team,
 		selected: boolean,
-		attackable: boolean,
+		target: boolean,
 		down: boolean,
-		carrier: boolean
+		carrier: boolean,
+		receiver: boolean
 	): string {
 		const baseStyle = `h-full w-full rounded-full flex items-center justify-center font-bold border-4`;
 		const teamColors = {
-			home: `${carrier ? 'border-[#ff6b2c]' : 'border-[#00a1de]'} ${selected ? 'bg-[#00a1de]' : 'bg-[#00a1de]/50'}`,
-			away: `${carrier ? 'border-[#ff6b2c]' : 'border-[#e22fbd]'} ${selected ? 'bg-[#e22fbd]' : 'bg-[#e22fbd]/50'}`
+			home: `${carrier ? 'border-[#ff6b2c]' : receiver ? 'border-dashed border-[#ff6b2c]' : 'border-[#00a1de]'} ${selected ? 'bg-[#00a1de]' : 'bg-[#00a1de]/50'}`,
+			away: `${carrier ? 'border-[#ff6b2c]' : receiver ? 'border-dashed border-[#ff6b2c]' : 'border-[#e22fbd]'} ${selected ? 'bg-[#e22fbd]' : 'bg-[#e22fbd]/50'}`
 		};
 		const downRotation = down ? 'transform rotate-180' : '';
-		const cursorStyle = attackable
+		const cursorStyle = target
 			? 'outline outline-4 outline-orange-500 cursor-crosshair'
 			: selected
 				? 'text-white cursor-grab'
@@ -54,7 +66,14 @@
 <div
 	role="gridcell"
 	tabindex={index}
-	class={getCharacterStyle(team, isSelected, isAttackable, isDown, isCarrier)}
+	class={getCharacterStyle(
+		team,
+		isSelected,
+		isPotentialTarget,
+		isDown,
+		isCarrier,
+		isPotentialReceiver
+	)}
 	{onclick}
 >
 	{getDisplayLabel(role)}

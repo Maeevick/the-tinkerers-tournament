@@ -97,9 +97,12 @@
 								team={character!.team}
 								role={character!.role}
 								isSelected={character!.state.selected}
-								isAttackable={!!selectedEntity &&
+								isPotentialTarget={!!selectedEntity &&
 									!!character &&
 									canAttack(selectedEntity, character, $gameStore)}
+								isPotentialReceiver={!!selectedEntity &&
+									!!character &&
+									selectedEntity.state.availableReceivers.has(character.id)}
 								isDown={character!.state.isDown}
 								isCarrier={character!.state.isCarrier}
 								onclick={() => handleEntityInteraction(character!.id)}

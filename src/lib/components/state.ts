@@ -1,8 +1,11 @@
+import type { EntityId } from '$lib/entities';
+
 export type StateComponent = {
 	state: {
 		selected: boolean;
 		remainingMovement: number;
 		availableMoves: Map<string, number>;
+		availableReceivers: Set<EntityId>;
 		remainingAttack: number;
 		isDown: boolean;
 		remainingHealth: number;
