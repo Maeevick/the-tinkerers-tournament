@@ -6,6 +6,8 @@ import type { StateComponent } from '$lib/components/state';
 import type { StatComponent } from '$lib/components/stats';
 import type { TeamComponent } from '$lib/components/team';
 
+import { bounce } from '$lib/systems/thingy';
+
 type FightingCharacter = Entity &
 	TeamComponent &
 	RoleComponent &
@@ -52,6 +54,14 @@ export function attack(attacker: FightingCharacter, defenser: FightingCharacter)
 		const damage = Math.max(0, attack - defense);
 		return {
 			...state,
+			thingy: {
+				...state.thingy,
+				carrierId: success && defenser.state.isCarrier ? null : state.thingy.carrierId,
+				position:
+					success && defenser.state.isCarrier
+						? bounce(state, defenser.position)
+						: state.thingy.position
+			},
 			entities: state.entities.map((entity) => {
 				if (entity.id === attacker.id) {
 					return {
@@ -75,7 +85,8 @@ export function attack(attacker: FightingCharacter, defenser: FightingCharacter)
 							canRegenIn: 1,
 							isDead,
 							remainingMovement: isDead ? 0 : entity.state.remainingMovement,
-							remainingAttack: isDead ? 0 : entity.state.remainingAttack
+							remainingAttack: isDead ? 0 : entity.state.remainingAttack,
+							isCarrier: false
 						}
 					};
 				}

@@ -65,7 +65,7 @@ function findFreePositionFromCenter(state: GameState) {
 	return { x: centerX, y: centerY };
 }
 
-function bounce(state: GameState, pos: Position): Position {
+export function bounce(state: GameState, pos: Position): Position {
 	const DIRECTIONS = [
 		{ x: -1, y: -1 },
 		{ x: 0, y: -1 },
@@ -135,13 +135,13 @@ export function pickup(entityId: EntityId | null): GameStateUpdater {
 		const pickup =
 			entity.stats.dexterity === 0 ? 0 : Math.floor(Math.random() * entity.stats.dexterity) + 1;
 
-		const isSuccess = pickup >= dd;
+		const success = pickup >= dd;
 		return {
 			...state,
 			thingy: {
 				...state.thingy,
-				carrierId: isSuccess ? entityId : null,
-				position: isSuccess ? entity.position : bounce(state, state.thingy.position)
+				carrierId: success ? entityId : null,
+				position: success ? entity.position : bounce(state, state.thingy.position)
 			},
 			entities: state.entities.map((entity) => {
 				if (entity.id === entityId) {
@@ -149,7 +149,7 @@ export function pickup(entityId: EntityId | null): GameStateUpdater {
 						...entity,
 						state: {
 							...entity.state,
-							isCarrier: isSuccess,
+							isCarrier: success,
 							availableReceivers: getAvailableReceivers(
 								{
 									...state,
@@ -159,7 +159,7 @@ export function pickup(entityId: EntityId | null): GameStateUpdater {
 													...e,
 													state: {
 														...e.state,
-														isCarrier: isSuccess
+														isCarrier: success
 													}
 												}
 											: e;
@@ -227,14 +227,14 @@ export function pass(carrier: Character, receiver: Character): GameStateUpdater 
 		const catchRoll =
 			receiver.stats.dexterity === 0 ? 0 : Math.floor(Math.random() * receiver.stats.dexterity) + 1;
 
-		const isSuccess = passRoll >= passDD && catchRoll >= catchDD;
+		const success = passRoll >= passDD && catchRoll >= catchDD;
 
 		return {
 			...state,
 			thingy: {
 				...state.thingy,
-				carrierId: isSuccess ? receiver.id : null,
-				position: isSuccess
+				carrierId: success ? receiver.id : null,
+				position: success
 					? receiver.position
 					: bounce(state, passRoll >= passDD ? receiver.position : carrier.position)
 			},
@@ -255,7 +255,7 @@ export function pass(carrier: Character, receiver: Character): GameStateUpdater 
 						...entity,
 						state: {
 							...entity.state,
-							isCarrier: isSuccess
+							isCarrier: success
 						}
 					};
 				}
