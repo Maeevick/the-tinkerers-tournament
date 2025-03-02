@@ -183,7 +183,12 @@ export function getAvailableReceivers(state: GameState, entityId: EntityId): Set
 	return new Set(
 		state.entities
 			.filter(
-				(e) => e.team === entity.team && !e.state.isDead && !e.state.isDown && e.id !== entity.id
+				(e) =>
+					e.team === entity.team &&
+					!e.state.isDead &&
+					!e.state.isDown &&
+					e.id !== entity.id &&
+					getManathanDistance(entity.position, e.position) <= entity.stats.dexterity * 2
 			)
 			.map((e) => e.id)
 	);

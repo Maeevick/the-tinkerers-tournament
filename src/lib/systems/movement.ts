@@ -4,6 +4,7 @@ import type { Position, PositionComponent } from '$lib/components/position';
 import type { StateComponent } from '$lib/components/state';
 
 import { COLUMNS, ROWS } from '$lib/constants/board';
+import { getAvailableReceivers } from '$lib/systems/thingy';
 
 function initBlockedPositions(
 	state: GameState,
@@ -142,7 +143,21 @@ export function move(entityId: EntityId | null, to: Position): GameStateUpdater 
 								...entity.state,
 								remainingMovement,
 								availableMoves: computeNextAvailableMoves(state, to, entityId, remainingMovement),
-								isDown: false
+								isDown: false,
+								availableReceivers: getAvailableReceivers(
+									{
+										...state,
+										entities: state.entities.map((e) => {
+											return e.id === entityId
+												? {
+														...e,
+														position: to
+													}
+												: e;
+										})
+									},
+									entityId
+								)
 							}
 						}
 					: entity;
