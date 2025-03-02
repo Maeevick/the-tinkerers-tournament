@@ -28,6 +28,7 @@ export function canAttack(
 	return (
 		!attacker.state.isDead &&
 		!attacker.state.isDown &&
+		!attacker.state.isCarrier &&
 		!!attacker.state.remainingAttack &&
 		!defenser.state.isDown &&
 		attacker.team !== defenser.team &&
