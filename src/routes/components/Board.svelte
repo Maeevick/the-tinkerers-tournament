@@ -14,7 +14,7 @@
 	import Cell from './Cell.svelte';
 	import Character from './Character.svelte';
 	import Thingy from './Thingy.svelte';
-	import { canPickup, pickup } from '$lib/systems/thingy';
+	import { canPickup, pass, pickup } from '$lib/systems/thingy';
 
 	const FULL_ROWS = Array.from({ length: ROWS.length }, (_, i) => i);
 	const FULL_COLS = Array.from({ length: COLUMNS.length }, (_, i) => i);
@@ -31,6 +31,15 @@
 
 	function handleEntityInteraction(entityId: EntityId) {
 		const targetEntity = $gameStore.entities.find((e) => e.id === entityId);
+
+		if (
+			selectedEntity &&
+			selectedEntity.state.isCarrier &&
+			targetEntity &&
+			selectedEntity.state.availableReceivers.has(entityId)
+		) {
+			return gameStore.update(pass(selectedEntity, targetEntity));
+		}
 		if (selectedEntity && targetEntity && canAttack(selectedEntity, targetEntity, $gameStore)) {
 			return gameStore.update(attack(selectedEntity, targetEntity));
 		}

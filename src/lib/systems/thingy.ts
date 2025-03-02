@@ -178,7 +178,7 @@ export function pickup(entityId: EntityId | null): GameStateUpdater {
 
 export function getAvailableReceivers(state: GameState, entityId: EntityId): Set<string> {
 	const entity = state.entities.find((e) => e.id === entityId);
-	if (!entity || !entity.state.isCarrier) return new Set();
+	if (!entity || !entity.state.isCarrier || entity.state.remainingPass <= 0) return new Set();
 
 	return new Set(
 		state.entities
@@ -192,4 +192,75 @@ export function getAvailableReceivers(state: GameState, entityId: EntityId): Set
 			)
 			.map((e) => e.id)
 	);
+}
+
+function canPass(carrier: Character, receiver: Character, state: GameState) {
+	return (
+		carrier &&
+		receiver &&
+		carrier.state.isCarrier &&
+		carrier.team === state.turn.activeTeam &&
+		carrier.team === receiver.team &&
+		!carrier.state.isDead &&
+		!carrier.state.isDown &&
+		!receiver.state.isDead &&
+		!receiver.state.isDown &&
+		carrier.state.remainingPass > 0
+	);
+}
+
+export function pass(carrier: Character, receiver: Character): GameStateUpdater {
+	return (state: GameState) => {
+		if (state.turn.currentTurn >= state.turn.totalTurns) return state;
+
+		if (!canPass(carrier, receiver, state)) return state;
+
+		const passDD =
+			getAdjacentOpponentCount(state, carrier) +
+			Math.floor(getManathanDistance(carrier.position, receiver.position) / 2) +
+			1;
+
+		const passRoll =
+			carrier.stats.dexterity === 0 ? 0 : Math.floor(Math.random() * carrier.stats.dexterity) + 1;
+
+		const catchDD = getAdjacentOpponentCount(state, receiver) + 1;
+		const catchRoll =
+			receiver.stats.dexterity === 0 ? 0 : Math.floor(Math.random() * receiver.stats.dexterity) + 1;
+
+		const isSuccess = passRoll >= passDD && catchRoll >= catchDD;
+
+		return {
+			...state,
+			thingy: {
+				...state.thingy,
+				carrierId: isSuccess ? receiver.id : null,
+				position: isSuccess
+					? receiver.position
+					: bounce(state, passRoll >= passDD ? receiver.position : carrier.position)
+			},
+			entities: state.entities.map((entity) => {
+				if (entity.id === carrier.id) {
+					return {
+						...entity,
+						state: {
+							...entity.state,
+							isCarrier: false,
+							remainingPass: 0,
+							availableReceivers: new Set()
+						}
+					};
+				}
+				if (entity.id === receiver.id) {
+					return {
+						...entity,
+						state: {
+							...entity.state,
+							isCarrier: isSuccess
+						}
+					};
+				}
+				return entity;
+			})
+		};
+	};
 }

@@ -38,6 +38,7 @@
 						<div>---</div>
 						<div>Attack: {character!.stats.attack} ({character!.state.remainingAttack})</div>
 						<div>Defense: {character!.stats.defense}</div>
+						<div>Dexterity: {character!.stats.dexterity} ({character!.state.remainingPass})</div>
 						<div>Health: {character!.stats.health} ({character!.state.remainingHealth})</div>
 						<div>---</div>
 						<div>Down: {character!.state.isDown}</div>
