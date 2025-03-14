@@ -51,6 +51,7 @@ The Tinkerer's Tournament is a creative playground exploring (almost) modern web
 - [x] Pass and Catch
 - [x] Dodge and Tacle
 - [ ] Victory points
+- [ ] Game Log (as a first "visual" feedback / text feedback)
 - [ ] Special actions
 - [ ] Full match system
 - [ ] Stats interface
