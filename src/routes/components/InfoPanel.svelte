@@ -38,7 +38,9 @@
 						<div>---</div>
 						<div>Attack: {character!.stats.attack} ({character!.state.remainingAttack})</div>
 						<div>Defense: {character!.stats.defense}</div>
-						<div>Dexterity: {character!.stats.dexterity} ({character!.state.remainingPass})</div>
+						<div>
+							Dexterity: {character!.stats.dexterity} ({character!.state.remainingPassOrShot})
+						</div>
 						<div>Health: {character!.stats.health} ({character!.state.remainingHealth})</div>
 						<div>Dodge: {character!.stats.dodge}</div>
 						<div>Tackle: {character!.stats.tackle}</div>

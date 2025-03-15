@@ -37,6 +37,7 @@
 		return 'border-r border-b border-black';
 	}
 
+	// TODO: Rework with constant 'GOAL_CAGES'
 	function getCellColor(x: number, y: number, highlighted: boolean): string {
 		if (highlighted) return color;
 		if (x === 0 || x === 10 || y === 0 || y === 24) return COLORS.stands;

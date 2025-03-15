@@ -12,6 +12,7 @@ import { ROLE_STATS } from '$lib/components/stats';
 
 import { INITIAL_TURN, type TurnComponent } from '$lib/components/turn';
 import { INITIAL_THINGY, type ThingyComponent } from '$lib/components/thingy';
+import { INITIAL_SCORE, type ScoreComponent } from '$lib/components/score';
 
 type EntitiesComponent = {
 	entities: (Entity &
@@ -21,7 +22,7 @@ type EntitiesComponent = {
 		StatComponent &
 		StateComponent)[];
 };
-export type GameState = EntitiesComponent & TurnComponent & ThingyComponent;
+export type GameState = EntitiesComponent & TurnComponent & ThingyComponent & ScoreComponent;
 
 export type GameStateUpdater = (state: GameState) => GameState;
 
@@ -46,7 +47,7 @@ const createInitialTeam = (
 				availableMoves: new Map<string, number>(),
 				availableReceivers: new Set<string>(),
 				remainingAttack: 1,
-				remainingPass: 1,
+				remainingPassOrShot: 1,
 				isDown: false,
 				remainingHealth: ROLE_STATS.Fighter.stats.health,
 				isDead: false,
@@ -65,7 +66,7 @@ const createInitialTeam = (
 				availableMoves: new Map<string, number>(),
 				availableReceivers: new Set<string>(),
 				remainingAttack: 1,
-				remainingPass: 1,
+				remainingPassOrShot: 1,
 				isDown: false,
 				remainingHealth: ROLE_STATS.Fighter.stats.health,
 				isDead: false,
@@ -84,7 +85,7 @@ const createInitialTeam = (
 				availableMoves: new Map<string, number>(),
 				availableReceivers: new Set<string>(),
 				remainingAttack: 1,
-				remainingPass: 1,
+				remainingPassOrShot: 1,
 				isDown: false,
 				remainingHealth: ROLE_STATS.Runner.stats.health,
 				isDead: false,
@@ -103,7 +104,7 @@ const createInitialTeam = (
 				availableMoves: new Map<string, number>(),
 				availableReceivers: new Set<string>(),
 				remainingAttack: 1,
-				remainingPass: 1,
+				remainingPassOrShot: 1,
 				isDown: false,
 				remainingHealth: ROLE_STATS.Runner.stats.health,
 				isDead: false,
@@ -122,7 +123,7 @@ const createInitialTeam = (
 				availableMoves: new Map<string, number>(),
 				availableReceivers: new Set<string>(),
 				remainingAttack: 1,
-				remainingPass: 1,
+				remainingPassOrShot: 1,
 				isDown: false,
 				remainingHealth: ROLE_STATS.Specialist.stats.health,
 				isDead: false,
@@ -137,7 +138,8 @@ const createInitialState = (): GameState => {
 	return {
 		entities: [...createInitialTeam('home', 2), ...createInitialTeam('away', 22)],
 		...INITIAL_TURN,
-		...INITIAL_THINGY
+		...INITIAL_THINGY,
+		...INITIAL_SCORE
 	};
 };
 

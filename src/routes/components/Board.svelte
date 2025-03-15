@@ -3,7 +3,7 @@
 	import type { Position } from '$lib/components/position';
 
 	import { COLORS } from '$lib/constants/colors';
-	import { COLUMNS, ROWS } from '$lib/constants/board';
+	import { COLUMNS, GOAL_CAGES, ROWS } from '$lib/constants/board';
 
 	import { gameStore } from '$lib/engine/store';
 
@@ -14,7 +14,7 @@
 	import Cell from './Cell.svelte';
 	import Character from './Character.svelte';
 	import Thingy from './Thingy.svelte';
-	import { canPickup, pass, pickup } from '$lib/systems/thingy';
+	import { canPickup, pass, pickup, shot } from '$lib/systems/thingy';
 
 	const FULL_ROWS = Array.from({ length: ROWS.length }, (_, i) => i);
 	const FULL_COLS = Array.from({ length: COLUMNS.length }, (_, i) => i);
@@ -29,6 +29,7 @@
 			: new Set<string>();
 	});
 
+	// FIXME: fix the x coordination double logic with the systems
 	function handleEntityInteraction(entityId: EntityId) {
 		const targetEntity = $gameStore.entities.find((e) => e.id === entityId);
 
@@ -50,6 +51,16 @@
 	}
 
 	function handleCellInteraction({ x, y }: Position) {
+		console.log('x:', x);
+		if (
+			selectedEntity &&
+			selectedEntity.state.isCarrier &&
+			GOAL_CAGES[selectedEntity.team === 'home' ? 'away' : 'home'].some(
+				(c) => c.x === x && c.y === y
+			)
+		) {
+			return gameStore.update(shot(selectedEntity, { x: x - 1, y }));
+		}
 		if (
 			!highlighted.has(`${x - 1}-${y}`) &&
 			!(x - 1 === $gameStore.thingy.position.x && y === $gameStore.thingy.position.y)

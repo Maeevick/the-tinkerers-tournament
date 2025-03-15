@@ -1,12 +1,14 @@
+import { GOAL_CAGES } from '$lib/constants/board';
+
 import type { Position, PositionComponent } from '$lib/components/position';
 import type { RoleComponent } from '$lib/components/role';
 import type { StateComponent } from '$lib/components/state';
 import type { StatComponent } from '$lib/components/stats';
-import type { TeamComponent } from '$lib/components/team';
+import type { Team, TeamComponent } from '$lib/components/team';
 import type { GameState, GameStateUpdater } from '$lib/engine/store';
 import type { Entity, EntityId } from '$lib/entities';
 
-// I know I have already this type in combat.ts but WET until I know what to do with it ;-)
+// TODO: I know I have already this type in combat.ts but WET until I know what to do with it ;-)
 type Character = Entity &
 	TeamComponent &
 	RoleComponent &
@@ -14,7 +16,7 @@ type Character = Entity &
 	StatComponent &
 	StateComponent;
 
-// I know I have already this function more or less in combat.ts but WET until I know what to do with it ;-)
+// TODO: I know I have already this function more or less in combat.ts but WET until I know what to do with it ;-)
 function getManathanDistance(entityPosition: Position, thingyPosition: Position): number {
 	return (
 		Math.abs(entityPosition.x - thingyPosition.x) + Math.abs(entityPosition.y - thingyPosition.y)
@@ -120,10 +122,9 @@ export function canPickup(entity: Character, state: GameState) {
 	);
 }
 
-export function pickup(entityId: EntityId | null): GameStateUpdater {
+export function pickup(entityId: EntityId): GameStateUpdater {
 	return (state: GameState) => {
 		if (state.turn.currentTurn >= state.turn.totalTurns) return state;
-		if (!entityId) return state;
 
 		const entity = state.entities.find((e) => e.id === entityId);
 		if (!entity) return state;
@@ -178,7 +179,7 @@ export function pickup(entityId: EntityId | null): GameStateUpdater {
 
 export function getAvailableReceivers(state: GameState, entityId: EntityId): Set<string> {
 	const entity = state.entities.find((e) => e.id === entityId);
-	if (!entity || !entity.state.isCarrier || entity.state.remainingPass <= 0) return new Set();
+	if (!entity || !entity.state.isCarrier || entity.state.remainingPassOrShot <= 0) return new Set();
 
 	return new Set(
 		state.entities
@@ -205,7 +206,7 @@ function canPass(carrier: Character, receiver: Character, state: GameState) {
 		!carrier.state.isDown &&
 		!receiver.state.isDead &&
 		!receiver.state.isDown &&
-		carrier.state.remainingPass > 0
+		carrier.state.remainingPassOrShot > 0
 	);
 }
 
@@ -245,7 +246,7 @@ export function pass(carrier: Character, receiver: Character): GameStateUpdater 
 						state: {
 							...entity.state,
 							isCarrier: false,
-							remainingPass: 0,
+							remainingPassOrShot: 0,
 							availableReceivers: new Set()
 						}
 					};
@@ -261,6 +262,73 @@ export function pass(carrier: Character, receiver: Character): GameStateUpdater 
 				}
 				return entity;
 			})
+		};
+	};
+}
+
+// FIXME: fix the x coordination double logic with Board.svelte
+function getGoalPoints(position: Position, team: Team): number {
+	return (
+		GOAL_CAGES[team].find((cage) => cage.x === position.x + 1 && cage.y === position.y)?.points ?? 0
+	);
+}
+
+function canShot(carrier: Character, state: GameState) {
+	return (
+		carrier &&
+		carrier.state.isCarrier &&
+		carrier.team === state.turn.activeTeam &&
+		!carrier.state.isDead &&
+		!carrier.state.isDown &&
+		carrier.state.remainingPassOrShot > 0
+	);
+}
+
+export function shot(carrier: Character, position: Position): GameStateUpdater {
+	return (state: GameState) => {
+		if (state.turn.currentTurn >= state.turn.totalTurns) return state;
+
+		if (!canShot(carrier, state)) return state;
+
+		const shotDD =
+			getAdjacentOpponentCount(state, carrier) +
+			Math.floor(getManathanDistance(carrier.position, position) / 2) +
+			1;
+
+		const shotRoll =
+			carrier.stats.dexterity === 0 ? 0 : Math.floor(Math.random() * carrier.stats.dexterity) + 1;
+
+		const success = shotRoll >= shotDD;
+
+		console.log('Shot', shotRoll, '>=', shotDD, '-> success:', success);
+		return {
+			...state,
+			thingy: {
+				...state.thingy,
+				carrierId: null,
+				position: success ? position : bounce(state, carrier.position)
+			},
+			entities: state.entities.map((entity) => {
+				if (entity.id === carrier.id) {
+					return {
+						...entity,
+						state: {
+							...entity.state,
+							isCarrier: false,
+							remainingPassOrShot: 0,
+							availableReceivers: new Set()
+						}
+					};
+				}
+				return entity;
+			}),
+			score: {
+				...state.score,
+				[carrier.team]: success
+					? state.score[carrier.team] +
+						getGoalPoints(position, carrier.team === 'home' ? 'away' : 'home')
+					: state.score[carrier.team]
+			}
 		};
 	};
 }

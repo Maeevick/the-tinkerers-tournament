@@ -7,7 +7,7 @@ export type StateComponent = {
 		availableMoves: Map<string, number>;
 		availableReceivers: Set<EntityId>;
 		remainingAttack: number;
-		remainingPass: number;
+		remainingPassOrShot: number;
 		isDown: boolean;
 		remainingHealth: number;
 		isDead: boolean;

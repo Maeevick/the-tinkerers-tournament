@@ -30,7 +30,8 @@
 		</div>
 		{#if !isOver}
 			<div>
-				Turn {Math.floor($gameStore.turn.currentTurn)} / {$gameStore.turn.totalTurns}
+				Score: {$gameStore.score[team]} & Turn {Math.floor($gameStore.turn.currentTurn)} / {$gameStore
+					.turn.totalTurns}
 			</div>
 			{#if isActive}
 				<div class="flex flex-col gap-2">
@@ -43,6 +44,10 @@
 					</button>
 				</div>
 			{/if}
+		{:else}
+			<div>
+				Score: {$gameStore.score[team]}
+			</div>
 		{/if}
 	</div>
 </div>

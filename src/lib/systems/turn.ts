@@ -26,7 +26,7 @@ export function endTurn() {
 					selected: false,
 					remainingMovement: entity.stats.movement,
 					remainingAttack: 1,
-					remainingPass: 1
+					remainingPassOrShot: 1
 				}
 			};
 		}),
