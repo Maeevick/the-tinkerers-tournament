@@ -16,7 +16,7 @@ export type StatComponent = {
 
 export const ROLE_STATS: Record<Role, StatComponent> = {
 	Fighter: {
-		stats: { movement: 3, attack: 4, defense: 4, health: 10, dexterity: 0, dodge: 2, tackle: 2 }
+		stats: { movement: 3, attack: 4, defense: 4, health: 10, dexterity: 1, dodge: 2, tackle: 2 }
 	},
 	Runner: {
 		stats: { movement: 5, attack: 3, defense: 2, health: 8, dexterity: 3, dodge: 4, tackle: 1 }
