@@ -1,6 +1,7 @@
 import type { GameState } from '$lib/engine/store';
 
 import { TURN_DURATION_IN_SEC } from '$lib/components/turn';
+import { INITIAL_THINGY } from '$lib/components/thingy';
 
 export function updateTimer() {
 	return (state: GameState): GameState => ({
@@ -37,4 +38,36 @@ export function endTurn() {
 			timeLeft: TURN_DURATION_IN_SEC
 		}
 	});
+}
+
+export function resetAfterGoal() {
+	return (state: GameState): GameState => {
+		if (state.score.celebrating !== 'goal') return state;
+		const BASE_COLULMS = {
+			'1': 3,
+			'2': 5,
+			'3': 1,
+			'4': 7,
+			'5': 4
+		};
+		return {
+			...state,
+			score: { ...state.score, celebrating: null },
+			entities: state.entities.map((entity) => {
+				if (!entity.state.isDead) {
+					const key = entity.id[1] as '1' | '2' | '3' | '4' | '5';
+					return {
+						...entity,
+						position: {
+							x: BASE_COLULMS[key] as number,
+							y: entity.team === 'home' ? 2 : 22
+						},
+						state: { ...entity.state, isDown: false, isCarrier: false }
+					};
+				}
+				return entity;
+			}),
+			...INITIAL_THINGY
+		};
+	};
 }

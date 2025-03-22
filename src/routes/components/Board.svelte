@@ -51,7 +51,6 @@
 	}
 
 	function handleCellInteraction({ x, y }: Position) {
-		console.log('x:', x);
 		if (
 			selectedEntity &&
 			selectedEntity.state.isCarrier &&

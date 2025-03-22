@@ -300,7 +300,6 @@ export function shot(carrier: Character, position: Position): GameStateUpdater {
 
 		const success = shotRoll >= shotDD;
 
-		console.log('Shot', shotRoll, '>=', shotDD, '-> success:', success);
 		return {
 			...state,
 			thingy: {
@@ -327,7 +326,8 @@ export function shot(carrier: Character, position: Position): GameStateUpdater {
 				[carrier.team]: success
 					? state.score[carrier.team] +
 						getGoalPoints(position, carrier.team === 'home' ? 'away' : 'home')
-					: state.score[carrier.team]
+					: state.score[carrier.team],
+				celebrating: success ? 'goal' : null
 			}
 		};
 	};
