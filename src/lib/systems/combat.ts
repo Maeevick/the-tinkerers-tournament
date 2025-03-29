@@ -52,6 +52,8 @@ export function attack(attacker: FightingCharacter, defenser: FightingCharacter)
 
 		const success = attack >= defense;
 		const damage = Math.max(0, attack - defense);
+		const isDefenserDead = success && defenser.state.remainingHealth - damage <= 0;
+
 		return {
 			...state,
 			thingy: {
@@ -61,6 +63,13 @@ export function attack(attacker: FightingCharacter, defenser: FightingCharacter)
 					success && defenser.state.isCarrier
 						? bounce(state, defenser.position)
 						: state.thingy.position
+			},
+			score: {
+				...state.score,
+				[attacker.team]: isDefenserDead
+					? state.score[attacker.team] + 1
+					: state.score[attacker.team],
+				celebrating: isDefenserDead ? 'kill' : null
 			},
 			entities: state.entities.map((entity) => {
 				if (entity.id === attacker.id) {
@@ -75,7 +84,6 @@ export function attack(attacker: FightingCharacter, defenser: FightingCharacter)
 				}
 				if (entity.id === defenser.id && success) {
 					const remainingHealth = entity.state.remainingHealth - damage;
-					const isDead = remainingHealth <= -1;
 					return {
 						...entity,
 						state: {
@@ -83,9 +91,9 @@ export function attack(attacker: FightingCharacter, defenser: FightingCharacter)
 							isDown: true,
 							remainingHealth,
 							canRegenIn: 1,
-							isDead,
-							remainingMovement: isDead ? 0 : entity.state.remainingMovement,
-							remainingAttack: isDead ? 0 : entity.state.remainingAttack,
+							isDead: isDefenserDead,
+							remainingMovement: isDefenserDead ? 0 : entity.state.remainingMovement,
+							remainingAttack: isDefenserDead ? 0 : entity.state.remainingAttack,
 							isCarrier: false
 						}
 					};

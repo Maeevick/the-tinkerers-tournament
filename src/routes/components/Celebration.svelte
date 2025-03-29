@@ -36,9 +36,9 @@
 	function getTitle(type: 'goal' | 'kill' | 'surprise'): string {
 		switch (type) {
 			case 'goal':
-				return 'GOAL!';
+				return "IT'S A GOOOAL!";
 			case 'kill':
-				return 'KILL!';
+				return 'KILLING SPREE!';
 			case 'surprise':
 			default:
 				return 'SURPRISE!';
