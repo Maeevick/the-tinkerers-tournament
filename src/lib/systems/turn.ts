@@ -27,6 +27,7 @@ export function endTurn() {
 					selected: false,
 					remainingMovement: entity.stats.movement,
 					remainingAttack: 1,
+					remainingAssault: entity.role === 'Runner' ? 1 : 0,
 					remainingPassOrShot: 1
 				}
 			};

@@ -103,3 +103,89 @@ export function attack(attacker: FightingCharacter, defenser: FightingCharacter)
 		};
 	};
 }
+
+export function canAssault(
+	attacker: FightingCharacter,
+	defenser: FightingCharacter,
+	state: GameState
+): boolean {
+	return (
+		defenser.state.isDown &&
+		!!attacker.state.remainingAssault &&
+		!attacker.state.isDead &&
+		!attacker.state.isDown &&
+		!attacker.state.isCarrier &&
+		attacker.team !== defenser.team &&
+		attacker.team === state.turn.activeTeam &&
+		getManathanDistance(attacker.position, defenser.position) === 1
+	);
+}
+
+export function assault(
+	attacker: FightingCharacter,
+	defenser: FightingCharacter
+): GameStateUpdater {
+	return (state: GameState) => {
+		if (state.turn.currentTurn >= state.turn.totalTurns) return state;
+
+		if (!canAssault(attacker, defenser, state)) return state;
+
+		const attack =
+			attacker.stats.attack === 0 ? 0 : Math.floor(Math.random() * attacker.stats.attack * 1.5) + 1;
+		const defense =
+			defenser.stats.defense === 0 ? 0 : Math.floor(Math.random() * defenser.stats.defense) + 1;
+
+		const success = attack >= defense;
+		const damage = Math.max(0, attack);
+		const isDefenserDead = success && defenser.state.remainingHealth - damage <= 0;
+
+		return {
+			...state,
+			thingy: {
+				...state.thingy,
+				carrierId: success && defenser.state.isCarrier ? null : state.thingy.carrierId,
+				position:
+					success && defenser.state.isCarrier
+						? bounce(state, defenser.position)
+						: state.thingy.position
+			},
+			score: {
+				...state.score,
+				[attacker.team]: isDefenserDead
+					? state.score[attacker.team] + 1
+					: state.score[attacker.team],
+				celebrating: isDefenserDead ? 'kill' : null
+			},
+			entities: state.entities.map((entity) => {
+				if (entity.id === attacker.id) {
+					return {
+						...entity,
+						state: {
+							...entity.state,
+							remainingMovement: success ? entity.state.remainingMovement : 0,
+							remainingAssault: 0
+						}
+					};
+				}
+				if (entity.id === defenser.id && success) {
+					const remainingHealth = entity.state.remainingHealth - damage;
+					return {
+						...entity,
+						state: {
+							...entity.state,
+							isDown: true,
+							remainingHealth,
+							canRegenIn: 1,
+							isDead: isDefenserDead,
+							remainingMovement: isDefenserDead ? 0 : entity.state.remainingMovement,
+							remainingAttack: isDefenserDead ? 0 : entity.state.remainingAttack,
+							remainingAssault: isDefenserDead ? 0 : entity.state.remainingAssault,
+							isCarrier: false
+						}
+					};
+				}
+				return entity;
+			})
+		};
+	};
+}

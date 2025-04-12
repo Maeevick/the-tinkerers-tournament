@@ -9,7 +9,7 @@
 
 	import { resetSelection, toggleEntitySelection } from '$lib/systems/selection';
 	import { move, standUp } from '$lib/systems/movement';
-	import { attack, canAttack } from '$lib/systems/combat';
+	import { assault, attack, canAssault, canAttack } from '$lib/systems/combat';
 
 	import Cell from './Cell.svelte';
 	import Character from './Character.svelte';
@@ -43,6 +43,9 @@
 		}
 		if (selectedEntity && targetEntity && canAttack(selectedEntity, targetEntity, $gameStore)) {
 			return gameStore.update(attack(selectedEntity, targetEntity));
+		}
+		if (selectedEntity && targetEntity && canAssault(selectedEntity, targetEntity, $gameStore)) {
+			return gameStore.update(assault(selectedEntity, targetEntity));
 		}
 		if (selectedEntity?.id === entityId && selectedEntity.state.isDown) {
 			return gameStore.update(standUp(entityId));

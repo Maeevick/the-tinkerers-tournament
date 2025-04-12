@@ -36,7 +36,10 @@
 							)})
 						</div>
 						<div>---</div>
-						<div>Attack: {character!.stats.attack} ({character!.state.remainingAttack})</div>
+						<div>
+							Attack: {character!.stats.attack} ({character!.state.remainingAttack})
+							{character!.role === 'Runner' ? `Assault: ${character!.state.remainingAssault}` : ''}
+						</div>
 						<div>Defense: {character!.stats.defense}</div>
 						<div>
 							Dexterity: {character!.stats.dexterity} ({character!.state.remainingPassOrShot})

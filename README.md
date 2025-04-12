@@ -50,9 +50,10 @@ The Tinkerer's Tournament is a creative playground exploring (almost) modern web
 - [x] Pick Up (the thingy: not a ball, not a frisbee, not defined)
 - [x] Pass and Catch
 - [x] Dodge and Tacle
-- [ ] Victory points
-- [ ] Game Log (as a first "visual" feedback / text feedback)
+- [x] Victory points
+- [x] Runner Asault
 - [ ] Special actions
+- [ ] Game Log (as a first "visual" feedback / text feedback)
 - [ ] Full match system
 - [ ] Stats interface
 - [ ] Design, Animation and Visual effects

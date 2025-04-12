@@ -8,6 +8,7 @@ export type StateComponent = {
 		availableReceivers: Set<EntityId>;
 		remainingAttack: number;
 		remainingPassOrShot: number;
+		remainingAssault: number;
 		isDown: boolean;
 		remainingHealth: number;
 		isDead: boolean;
