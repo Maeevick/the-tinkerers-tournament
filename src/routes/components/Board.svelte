@@ -121,7 +121,8 @@
 								isSelected={character!.state.selected}
 								isPotentialTarget={!!selectedEntity &&
 									!!character &&
-									canAttack(selectedEntity, character, $gameStore)}
+									(canAttack(selectedEntity, character, $gameStore) ||
+										canAssault(selectedEntity, character, $gameStore))}
 								isPotentialReceiver={!!selectedEntity &&
 									!!character &&
 									selectedEntity.state.availableReceivers.has(character.id)}
